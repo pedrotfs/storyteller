@@ -75,8 +75,8 @@ public class DefaultBookService implements BookService {
     @Override
     public Book removeSection(Book book, String section) {
         Book entity = findBook(book);
-        if(entity != null && entity.getSections().contains(book)) {
-            entity.getSections().remove(book);
+        if(entity != null && entity.getSections().contains(section)) {
+            entity.getSections().remove(section);
             repository.save(entity);
         }
         return entity;
