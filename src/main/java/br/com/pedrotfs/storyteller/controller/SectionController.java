@@ -58,9 +58,9 @@ public class SectionController {
 
     @GetMapping("/")
     public ResponseEntity<Section> find(@RequestParam final String message) {
-        LOG.info("received message to find by" + message);
+        LOG.info("received message to find by " + message);
 
-        Section entity = gson.fromJson(message, Section.class);
+        Section entity = new Section(null, message, null, null, null, null, null);
         Section result = service.find(entity);
 
         LOG.info("operation performed. result follows:");

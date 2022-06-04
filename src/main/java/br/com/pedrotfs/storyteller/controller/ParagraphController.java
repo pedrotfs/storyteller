@@ -1,6 +1,7 @@
 package br.com.pedrotfs.storyteller.controller;
 
 import br.com.pedrotfs.storyteller.domain.Paragraph;
+import br.com.pedrotfs.storyteller.domain.Section;
 import br.com.pedrotfs.storyteller.service.ParagraphService;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
@@ -58,9 +59,9 @@ public class ParagraphController {
 
     @GetMapping("/")
     public ResponseEntity<Paragraph> find(@RequestParam final String message) {
-        LOG.info("received message to find by" + message);
+        LOG.info("received message to find by " + message);
 
-        Paragraph entity = gson.fromJson(message, Paragraph.class);
+        Paragraph entity = new Paragraph(null, message, null, null, null, null, null);
         Paragraph result = service.find(entity);
         LOG.info("operation performed. result follows:");
         if(result != null) {

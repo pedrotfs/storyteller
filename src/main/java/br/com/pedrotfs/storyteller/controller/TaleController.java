@@ -58,9 +58,9 @@ public class TaleController {
 
     @GetMapping("/")
     public ResponseEntity<Tale> find(@RequestParam final String message) {
-        LOG.info("received message to find by" + message);
+        LOG.info("received message to find by " + message);
 
-        Tale entity = gson.fromJson(message, Tale.class);
+        Tale entity = new Tale(null, message, null, null, null, null, null);
         Tale result = service.findTale(entity);
         LOG.info("operation performed. result follows:");
         if(result != null) {

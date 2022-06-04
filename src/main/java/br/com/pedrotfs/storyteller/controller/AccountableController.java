@@ -1,6 +1,7 @@
 package br.com.pedrotfs.storyteller.controller;
 
 import br.com.pedrotfs.storyteller.domain.Accountables;
+import br.com.pedrotfs.storyteller.domain.Chapter;
 import br.com.pedrotfs.storyteller.service.AccountableService;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
@@ -56,9 +57,9 @@ public class AccountableController {
 
     @GetMapping("/")
     public ResponseEntity<Accountables> find(@RequestParam final String message) {
-        LOG.info("received message to find by" + message);
+        LOG.info("received message to find by " + message);
 
-        Accountables entity = gson.fromJson(message, Accountables.class);
+        Accountables entity = new Accountables(message, null, 0, Boolean.FALSE);
         Accountables result = service.find(entity);
         LOG.info("operation performed. result follows:");
         if(result != null) {

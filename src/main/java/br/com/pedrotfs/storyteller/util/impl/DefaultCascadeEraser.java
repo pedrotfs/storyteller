@@ -29,31 +29,41 @@ public class DefaultCascadeEraser implements CascadeEraser {
 
     @Override
     public void cascadeErase(Tale tale) {
-        tale.getBooks().forEach(q -> bookRepository.findById(q).ifPresent(this::cascadeErase));
+        if(tale.getBooks() != null) {
+            tale.getBooks().forEach(q -> bookRepository.findById(q).ifPresent(this::cascadeErase));
+        }
         taleRepository.delete(tale);
     }
 
     @Override
     public void cascadeErase(Book book) {
-        book.getSections().forEach(q -> sectionRepository.findById(q).ifPresent(this::cascadeErase));
+        if(book.getSections() != null) {
+            book.getSections().forEach(q -> sectionRepository.findById(q).ifPresent(this::cascadeErase));
+        }
         bookRepository.delete(book);
     }
 
     @Override
     public void cascadeErase(Section section) {
-        section.getChapter().forEach(q -> chapterRepository.findById(q).ifPresent(this::cascadeErase));
+        if(section.getChapter() != null) {
+            section.getChapter().forEach(q -> chapterRepository.findById(q).ifPresent(this::cascadeErase));
+        }
         sectionRepository.delete(section);
     }
 
     @Override
     public void cascadeErase(Chapter chapter) {
-        chapter.getParagraphs().forEach(q -> paragraphRepository.findById(q).ifPresent(this::cascadeErase));
+        if(chapter.getParagraphs() != null) {
+            chapter.getParagraphs().forEach(q -> paragraphRepository.findById(q).ifPresent(this::cascadeErase));
+        }
         chapterRepository.delete(chapter);
     }
 
     @Override
     public void cascadeErase(Paragraph paragraph) {
-        paragraph.getAccountables().forEach(q -> accountableRepository.findById(q).ifPresent(p -> accountableRepository.delete(p)));
+        if(paragraph.getAccountables() != null) {
+            paragraph.getAccountables().forEach(q -> accountableRepository.findById(q).ifPresent(p -> accountableRepository.delete(p)));
+        }
         paragraphRepository.delete(paragraph);
     }
 }

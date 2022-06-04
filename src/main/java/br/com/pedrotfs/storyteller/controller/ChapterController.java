@@ -1,6 +1,7 @@
 package br.com.pedrotfs.storyteller.controller;
 
 import br.com.pedrotfs.storyteller.domain.Chapter;
+import br.com.pedrotfs.storyteller.domain.Section;
 import br.com.pedrotfs.storyteller.service.ChapterService;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
@@ -56,9 +57,9 @@ public class ChapterController {
 
     @GetMapping("/")
     public ResponseEntity<Chapter> find(@RequestParam final String message) {
-        LOG.info("received message to find by" + message);
+        LOG.info("received message to find by " + message);
 
-        Chapter entity = gson.fromJson(message, Chapter.class);
+        Chapter entity = new Chapter(null, message, null, null, null, null, null);
         Chapter result = service.find(entity);
         LOG.info("operation performed. result follows:");
         if(result != null) {
