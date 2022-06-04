@@ -6,10 +6,12 @@ import br.com.pedrotfs.storyteller.service.ChapterService;
 import br.com.pedrotfs.storyteller.util.CascadeEraser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class DefaultChapterService implements ChapterService {
 
     @Autowired

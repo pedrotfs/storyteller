@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController("/paragraph")
+@RestController
+@RequestMapping("paragraphs/")
 public class ParagraphController {
 
     @Autowired
@@ -20,21 +21,21 @@ public class ParagraphController {
 
     @PostMapping("/")
     @PutMapping("/")
-    public ResponseEntity<Paragraph> upsert(final String message) {
+    public ResponseEntity<Paragraph> upsert(@RequestBody final String message) {
         Paragraph entity = gson.fromJson(message, Paragraph.class);
         Paragraph result = service.upsert(entity);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @DeleteMapping("/")
-    public ResponseEntity<Paragraph> delete(final String message) {
+    public ResponseEntity<Paragraph> delete(@RequestBody final String message) {
         Paragraph entity = gson.fromJson(message, Paragraph.class);
         Paragraph result = service.remove(entity);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @GetMapping("/")
-    public ResponseEntity<Paragraph> find(final String message) {
+    public ResponseEntity<Paragraph> find(@RequestParam final String message) {
         Paragraph entity = gson.fromJson(message, Paragraph.class);
         Paragraph result = service.find(entity);
         if(result != null) {
@@ -52,7 +53,7 @@ public class ParagraphController {
 
 
     @PostMapping("/addChild")
-    public ResponseEntity<Paragraph> addChild(final String message) {
+    public ResponseEntity<Paragraph> addChild(@RequestBody final String message) {
         Paragraph entity = gson.fromJson(message, Paragraph.class);
         Paragraph result = service.find(entity);
         for(String child : entity.getAccountables()) {

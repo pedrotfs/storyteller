@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController("/book")
+@RestController
+@RequestMapping("books/")
 public class BookController {
 
     @Autowired
@@ -20,21 +21,21 @@ public class BookController {
 
     @PostMapping("/")
     @PutMapping("/")
-    public ResponseEntity<Book> upsert(final String message) {
+    public ResponseEntity<Book> upsert(@RequestBody final String message) {
         Book entity = gson.fromJson(message, Book.class);
         Book result = service.upsertBook(entity);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @DeleteMapping("/")
-    public ResponseEntity<Book> delete(final String message) {
+    public ResponseEntity<Book> delete(@RequestBody final String message) {
         Book entity = gson.fromJson(message, Book.class);
         Book result = service.removeBook(entity);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @GetMapping("/")
-    public ResponseEntity<Book> find(final String message) {
+    public ResponseEntity<Book> find(@RequestParam final String message) {
         Book entity = gson.fromJson(message, Book.class);
         Book result = service.findBook(entity);
         if(result != null) {
@@ -52,7 +53,7 @@ public class BookController {
 
 
     @PostMapping("/addChild")
-    public ResponseEntity<Book> addChild(final String message) {
+    public ResponseEntity<Book> addChild(@RequestBody final String message) {
         Book entity = gson.fromJson(message, Book.class);
         Book result = service.findBook(entity);
         for(String child : entity.getSections()) {
@@ -62,7 +63,7 @@ public class BookController {
     }
 
     @PostMapping("/delChild")
-    public ResponseEntity<Book> delChild(final String message) {
+    public ResponseEntity<Book> delChild(@RequestBody final String message) {
         Book entity = gson.fromJson(message, Book.class);
         Book result = service.findBook(entity);
         for(String child : entity.getSections()) {

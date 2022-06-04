@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController("/accountable")
+@RestController
+@RequestMapping("accountables/")
 public class AccountableController {
 
     @Autowired
@@ -20,21 +21,21 @@ public class AccountableController {
 
     @PostMapping("/")
     @PutMapping("/")
-    public ResponseEntity<Accountables> upsert(final String message) {
+    public ResponseEntity<Accountables> upsert(@RequestBody final String message) {
         Accountables entity = gson.fromJson(message, Accountables.class);
         Accountables result = service.upsert(entity);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @DeleteMapping("/")
-    public ResponseEntity<Accountables> delete(final String message) {
+    public ResponseEntity<Accountables> delete(@RequestBody final String message) {
         Accountables entity = gson.fromJson(message, Accountables.class);
         Accountables result = service.remove(entity);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @GetMapping("/")
-    public ResponseEntity<Accountables> find(final String message) {
+    public ResponseEntity<Accountables> find(@RequestParam final String message) {
         Accountables entity = gson.fromJson(message, Accountables.class);
         Accountables result = service.find(entity);
         if(result != null) {

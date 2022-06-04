@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController("/tale")
+@RestController
+@RequestMapping("tales/")
 public class TaleController {
 
     @Autowired
@@ -20,21 +21,21 @@ public class TaleController {
 
     @PostMapping("/")
     @PutMapping("/")
-    public ResponseEntity<Tale> upsert(final String message) {
+    public ResponseEntity<Tale> upsert(@RequestBody final String message) {
         Tale entity = gson.fromJson(message, Tale.class);
         Tale result = service.upsertTale(entity);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @DeleteMapping("/")
-    public ResponseEntity<Tale> delete(final String message) {
+    public ResponseEntity<Tale> delete(@RequestBody final String message) {
         Tale entity = gson.fromJson(message, Tale.class);
         Tale result = service.removeTale(entity);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @GetMapping("/")
-    public ResponseEntity<Tale> find(final String message) {
+    public ResponseEntity<Tale> find(@RequestParam final String message) {
         Tale entity = gson.fromJson(message, Tale.class);
         Tale result = service.findTale(entity);
         if(result != null) {
@@ -52,7 +53,7 @@ public class TaleController {
 
 
     @PostMapping("/addChild")
-    public ResponseEntity<Tale> addChild(final String message) {
+    public ResponseEntity<Tale> addChild(@RequestBody final String message) {
         Tale entity = gson.fromJson(message, Tale.class);
         Tale result = service.findTale(entity);
         for(String child : entity.getBooks()) {
@@ -62,7 +63,7 @@ public class TaleController {
     }
 
     @PostMapping("/delChild")
-    public ResponseEntity<Tale> delChild(final String message) {
+    public ResponseEntity<Tale> delChild(@RequestBody final String message) {
         Tale entity = gson.fromJson(message, Tale.class);
         Tale result = service.findTale(entity);
         for(String child : entity.getBooks()) {

@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController("/section")
+@RestController
+@RequestMapping("sections/")
 public class SectionController {
 
     @Autowired
@@ -20,21 +21,21 @@ public class SectionController {
 
     @PostMapping("/")
     @PutMapping("/")
-    public ResponseEntity<Section> upsert(final String message) {
+    public ResponseEntity<Section> upsert(@RequestBody final String message) {
         Section entity = gson.fromJson(message, Section.class);
         Section result = service.upsert(entity);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @DeleteMapping("/")
-    public ResponseEntity<Section> delete(final String message) {
+    public ResponseEntity<Section> delete(@RequestBody final String message) {
         Section entity = gson.fromJson(message, Section.class);
         Section result = service.remove(entity);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @GetMapping("/")
-    public ResponseEntity<Section> find(final String message) {
+    public ResponseEntity<Section> find(@RequestParam final String message) {
         Section entity = gson.fromJson(message, Section.class);
         Section result = service.find(entity);
         if(result != null) {
@@ -52,7 +53,7 @@ public class SectionController {
 
 
     @PostMapping("/addChild")
-    public ResponseEntity<Section> addChild(final String message) {
+    public ResponseEntity<Section> addChild(@RequestBody final String message) {
         Section entity = gson.fromJson(message, Section.class);
         Section result = service.find(entity);
         for(String child : entity.getChapter()) {
@@ -62,7 +63,7 @@ public class SectionController {
     }
 
     @PostMapping("/delChild")
-    public ResponseEntity<Section> delChild(final String message) {
+    public ResponseEntity<Section> delChild(@RequestBody final String message) {
         Section entity = gson.fromJson(message, Section.class);
         Section result = service.find(entity);
         for(String child : entity.getChapter()) {
