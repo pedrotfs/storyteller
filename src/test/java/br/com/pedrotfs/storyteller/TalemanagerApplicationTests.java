@@ -3,6 +3,8 @@ package br.com.pedrotfs.storyteller;
 import br.com.pedrotfs.storyteller.controller.*;
 import br.com.pedrotfs.storyteller.domain.*;
 import br.com.pedrotfs.storyteller.repository.*;
+import br.com.pedrotfs.storyteller.util.DatabaseCsvDumper;
+import br.com.pedrotfs.storyteller.util.DatabaseCsvLoader;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @SpringBootTest
@@ -55,9 +58,19 @@ class TalemanagerApplicationTests {
 	@Autowired
 	private TaleRepository taleRepository;
 
+	@Autowired
+	private DatabaseCsvDumper databaseCsvDumper;
+
+	@Autowired
+	private DatabaseCsvLoader databaseCsvLoader;
+
 	private final static String ENTITY_ID = "d04b98f48e8f8bcc15c6ae5ac050801cd6dcfd428fb5f9e65c4e16e7807340fa";
 
+	private final static String ENTITY_ID_2 = "d04b98f48e8f8bcc15c6ae5ac050801cd6dcfd428fb5f9e65c4e16e7807340fe";
+
 	private final static String ENTITY_CHILD_ID = "d04b98f48e8f8bcc15c6ae5ac050801cd6dcfd428fb5f9e65c4e16e7807340fc";
+
+	private final static String ENTITY_CHILD_ID_2 = "d04b98f48e8f8bcc15c6ae5ac050801cd6dcfd428fb5f9e65c4e16e7807340fd";
 
 	private final static String ENTITY_ID_DUPLICATE = "d04b98f48e8f8bcc15c6ae5ac050801cd6dcfd428fb5f9e65c4e16e7807340fb";
 
@@ -69,15 +82,21 @@ class TalemanagerApplicationTests {
 
 	@Test
 	void contextLoads() {
+
 		clearDb();
 
+		testDomain();
+		testDumpAndRestoreUtils();
+
+		clearDb();
+	}
+
+	private void testDomain() {
 		testTale();
 		testBook();
 		testSection();
 		testChapter();
 		testParagraph();
-
-		clearDb();
 	}
 
 	private void testTale() {
@@ -682,6 +701,87 @@ class TalemanagerApplicationTests {
 
 		stringBuilder.append("\n}");
 		return stringBuilder.toString();
+	}
+
+	private void testDumpAndRestoreUtils() {
+		clearDb();
+		testDumpAndRestoreLoadData();
+
+		databaseCsvDumper.dumpAll();
+		clearDb();
+		databaseCsvLoader.loadAll();
+
+		List<Tale> tales = taleRepository.findAll();
+		Assertions.assertFalse(tales.isEmpty());
+		Assertions.assertEquals(tales.size(), 1);
+		Tale tale = tales.get(0);
+		Assertions.assertEquals(tale.getId(), ENTITY_ID);
+		Assertions.assertEquals(tale.getName(), ENTITY_NAME);
+		Assertions.assertFalse(tale.getBooks().isEmpty());
+		Assertions.assertEquals(tale.getBooks().get(0), ENTITY_CHILD_ID);
+
+		List<Book> books = bookRepository.findAll();
+		Assertions.assertFalse(books.isEmpty());
+		Assertions.assertEquals(books.size(), 1);
+		Book book = books.get(0);
+		Assertions.assertEquals(book.getId(), ENTITY_ID);
+		Assertions.assertEquals(book.getName(), ENTITY_NAME);
+		Assertions.assertFalse(book.getSections().isEmpty());
+		Assertions.assertEquals(book.getSections().get(0), ENTITY_CHILD_ID);
+
+		List<Section> sections = sectionRepository.findAll();
+		Assertions.assertFalse(sections.isEmpty());
+		Assertions.assertEquals(sections.size(), 1);
+		Section section = sections.get(0);
+		Assertions.assertEquals(section.getId(), ENTITY_ID);
+		Assertions.assertEquals(section.getName(), ENTITY_NAME);
+		Assertions.assertFalse(section.getChapter().isEmpty());
+		Assertions.assertEquals(section.getChapter().get(0), ENTITY_CHILD_ID);
+
+		List<Chapter> chapters = chapterRepository.findAll();
+		Assertions.assertFalse(chapters.isEmpty());
+		Assertions.assertEquals(chapters.size(), 1);
+		Chapter chapter = chapters.get(0);
+		Assertions.assertEquals(chapter.getId(), ENTITY_ID);
+		Assertions.assertEquals(chapter.getName(), ENTITY_NAME);
+		Assertions.assertFalse(chapter.getParagraphs().isEmpty());
+		Assertions.assertEquals(chapter.getParagraphs().get(0), ENTITY_CHILD_ID);
+
+		List<Paragraph> paragraphs = paragraphRepository.findAll();
+		Assertions.assertFalse(paragraphs.isEmpty());
+		Assertions.assertEquals(paragraphs.size(), 1);
+		Paragraph paragraph = paragraphs.get(0);
+		Assertions.assertEquals(paragraph.getId(), ENTITY_ID);
+		Assertions.assertEquals(paragraph.getName(), ENTITY_NAME);
+		Assertions.assertFalse(paragraph.getAccountables().isEmpty());
+		Assertions.assertEquals(paragraph.getAccountables().get(0), ENTITY_CHILD_ID);
+		Assertions.assertEquals(paragraph.getAccountables().get(1), ENTITY_CHILD_ID_2);
+
+		List<Accountables> accountables = accountableRepository.findAll();
+		Assertions.assertFalse(accountables.isEmpty());
+		Assertions.assertEquals(accountables.size(), 2);
+		Accountables accountable = accountables.get(0);
+		Assertions.assertEquals(accountable.getId(), ENTITY_ID);
+		Assertions.assertEquals(accountable.getName(), ENTITY_NAME);
+		accountable = accountables.get(1);
+		Assertions.assertEquals(accountable.getId(), ENTITY_ID_2);
+		Assertions.assertEquals(accountable.getName(), ENTITY_NAME);
+	}
+
+	private void testDumpAndRestoreLoadData() {
+		taleController.upsert(getTaleMessage(ENTITY_ID, ENTITY_NAME, null));
+		taleController.addChild(getTaleMessage(ENTITY_ID, ENTITY_NAME, Collections.singletonList(ENTITY_CHILD_ID)));
+		bookController.upsert(getBookMessage(ENTITY_ID, ENTITY_NAME, null));
+		bookController.addChild(getBookMessage(ENTITY_ID, ENTITY_NAME, Collections.singletonList(ENTITY_CHILD_ID)));
+		sectionController.upsert(getSectionMessage(ENTITY_ID, ENTITY_NAME, null));
+		sectionController.addChild(getSectionMessage(ENTITY_ID, ENTITY_NAME, Collections.singletonList(ENTITY_CHILD_ID)));
+		chapterController.upsert(getChapterMessage(ENTITY_ID, ENTITY_NAME, null));
+		chapterController.addChild(getChapterMessage(ENTITY_ID, ENTITY_NAME, Collections.singletonList(ENTITY_CHILD_ID)));
+		paragraphController.upsert(getParagraphMessage(ENTITY_ID, ENTITY_NAME, null));
+		paragraphController.addChild(getParagraphMessage(ENTITY_ID, ENTITY_NAME, Collections.singletonList(ENTITY_CHILD_ID)));
+		paragraphController.addChild(getParagraphMessage(ENTITY_ID, ENTITY_NAME, Collections.singletonList(ENTITY_CHILD_ID_2)));
+		accountableController.upsert(getAccountablesMessage(ENTITY_ID, ENTITY_NAME));
+		accountableController.upsert(getAccountablesMessage(ENTITY_ID_2, ENTITY_NAME));
 	}
 
 	private void clearDb() {
