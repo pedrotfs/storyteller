@@ -107,7 +107,7 @@ public class ParagraphController {
         Paragraph entity = gson.fromJson(message, Paragraph.class);
         Paragraph result = service.find(entity);
         for(String child : entity.getAccountables()) {
-            service.addAccountable(result, child);
+            service.removeAccountable(result, child);
         }
         LOG.info("operation performed. result follows:");
         if(result != null) {
