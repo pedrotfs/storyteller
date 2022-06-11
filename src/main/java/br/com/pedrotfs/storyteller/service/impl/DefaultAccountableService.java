@@ -50,4 +50,12 @@ public class DefaultAccountableService implements AccountableService {
     public List<Accountables> findAll() {
         return repository.findAll();
     }
+
+    public AccountableRepository getRepository() {
+        return repository;
+    }
+
+    public void setRepository(AccountableRepository repository) {
+        this.repository = repository;
+    }
 }

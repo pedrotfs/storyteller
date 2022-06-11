@@ -2,6 +2,7 @@ package br.com.pedrotfs.storyteller;
 
 import br.com.pedrotfs.storyteller.controller.*;
 import br.com.pedrotfs.storyteller.domain.*;
+import br.com.pedrotfs.storyteller.helper.DatabaseTestProfile;
 import br.com.pedrotfs.storyteller.repository.*;
 import br.com.pedrotfs.storyteller.util.DatabaseCsvDumper;
 import br.com.pedrotfs.storyteller.util.DatabaseCsvLoader;
@@ -11,12 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ContextConfiguration;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 @SpringBootTest
+@ContextConfiguration(classes = DatabaseTestProfile.class)
 class TalemanagerApplicationTests {
 
 	@Autowired
