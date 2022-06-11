@@ -36,4 +36,5 @@ public class UtilController {
         databaseCsvLoader.loadAll();
         return new ResponseEntity<>("operation performed", HttpStatus.OK);
     }
+
 }
