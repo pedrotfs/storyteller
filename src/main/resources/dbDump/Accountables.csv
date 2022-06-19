@@ -1,3 +1,3 @@
-"id","name","amount","visible"
-"acc1Id","accountable1","1","true"
-"acc2Id","accountable2","10","true"
+"id","name","amount","visible","title"
+"acc1Id","accountable1","1","true","title"
+"acc2Id","accountable2","10","true","title"

@@ -208,8 +208,9 @@ public class DefaultDatabaseCsvLoader implements DatabaseCsvLoader {
             String name = nextRecord[1] == null ? "" : nextRecord[1];
             Integer amount = nextRecord[2] == null ? 0 : Integer.parseInt(nextRecord[2]);
             Boolean visible = nextRecord[3] == null ? Boolean.TRUE : Boolean.parseBoolean(nextRecord[3]);
+            String title = nextRecord[4] == null ? "" : nextRecord[4];
 
-            Accountables accountables = new Accountables(id, name, amount, visible);
+            Accountables accountables = new Accountables(id, name, amount, visible, title);
             accountableService.upsert(accountables);
 
         }

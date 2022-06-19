@@ -59,7 +59,7 @@ public class AccountableController {
     public ResponseEntity<Accountables> find(@RequestParam final String message) {
         LOG.info("received message to find by " + message);
 
-        Accountables entity = new Accountables(message, null, 0, Boolean.FALSE);
+        Accountables entity = new Accountables(message, null, 0, Boolean.FALSE, null);
         Accountables result = service.find(entity);
         LOG.info("operation performed. result follows:");
         if(result != null) {

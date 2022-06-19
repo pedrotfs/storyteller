@@ -117,6 +117,6 @@ public class StoryTellerFeatureTestHelper {
     }
 
     public static Accountables createTestAccountable(final String id, final String name, final Integer amount) {
-        return new Accountables(id, name, amount, Boolean.TRUE);
+        return new Accountables(id, name, amount, Boolean.TRUE, "title");
     }
 }

@@ -15,10 +15,13 @@ public class Accountables {
 
     private Boolean visible = Boolean.TRUE;
 
-    public Accountables(String id, String name, Integer amount, Boolean visible) {
+    private String title;
+
+    public Accountables(String id, String name, Integer amount, Boolean visible, String title) {
         this.id = id;
         this.name = name;
         this.amount = amount;
+        this.title = title;
         if(visible != null) {
             this.visible = visible;
         }
@@ -43,6 +46,7 @@ public class Accountables {
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", amount='" + amount + '\'' +
+                ", title='" + title + '\'' +
                 '}';
     }
 
@@ -76,5 +80,13 @@ public class Accountables {
 
     public void setVisible(Boolean visible) {
         this.visible = visible;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

@@ -171,6 +171,7 @@ public class DefaultDatabaseCsvDumper implements DatabaseCsvDumper {
             line.add(q.getName());
             line.add(q.getAmount().toString());
             line.add(q.getVisible().toString());
+            line.add(q.getTitle());
             writer.writeNext(line.stream().toArray(String[]::new));
         });
 
