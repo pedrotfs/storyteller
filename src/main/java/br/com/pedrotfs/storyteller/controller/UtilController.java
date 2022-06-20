@@ -2,6 +2,7 @@ package br.com.pedrotfs.storyteller.controller;
 
 import br.com.pedrotfs.storyteller.util.DatabaseCsvDumper;
 import br.com.pedrotfs.storyteller.util.DatabaseCsvLoader;
+import br.com.pedrotfs.storyteller.util.RegistryHierarchyFinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,9 @@ public class UtilController {
     @Autowired
     private DatabaseCsvDumper databaseCsvDumper;
 
+    @Autowired
+    private RegistryHierarchyFinder registryHierarchyFinder;
+
     @GetMapping("dump/")
     public ResponseEntity<String> dump() {
         LOG.info("received message to dump database");
@@ -35,6 +39,14 @@ public class UtilController {
         LOG.info("received message to restore database from dump");
         databaseCsvLoader.loadAll();
         return new ResponseEntity<>("operation performed", HttpStatus.OK);
+    }
+
+    @GetMapping("hierarchy/")
+    public ResponseEntity<String> getHierarchy() {
+        LOG.info("received request for registry hierarchy");
+        final String registerOrder = registryHierarchyFinder.getRegisterOrder();
+        LOG.info(registerOrder);
+        return new ResponseEntity<>(registerOrder, HttpStatus.OK);
     }
 
 }
