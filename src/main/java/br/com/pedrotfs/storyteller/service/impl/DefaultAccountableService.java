@@ -28,6 +28,7 @@ public class DefaultAccountableService implements AccountableService {
         toUpsert.setAmount(accountables.getAmount());
         toUpsert.setVisible(accountables.getVisible());
         toUpsert.setTitle(accountables.getTitle());
+        toUpsert.setIonIcon(accountables.getIonIcon());
         repository.save(toUpsert);
         return toUpsert;
     }

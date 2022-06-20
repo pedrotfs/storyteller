@@ -89,7 +89,7 @@ class DefaultAccountableServiceTest {
     }
 
     private Accountables createTestEntity(final String name, final String id, final String amount, final Boolean visible) {
-        return new Accountables(id, name, Integer.parseInt(amount), visible, null);
+        return new Accountables(id, name, Integer.parseInt(amount), visible, null, null);
     }
 
 }

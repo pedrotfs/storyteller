@@ -119,7 +119,7 @@ class AccountableControllerTest {
     }
 
     private Accountables createTestEntity(final String id, final Integer amount) {
-        return new Accountables(id, AccountableControllerTest.NAME, amount, Boolean.TRUE, null);
+        return new Accountables(id, AccountableControllerTest.NAME, amount, Boolean.TRUE, null, null);
     }
 
 }

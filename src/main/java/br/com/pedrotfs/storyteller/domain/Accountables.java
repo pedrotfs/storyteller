@@ -17,11 +17,14 @@ public class Accountables {
 
     private String title;
 
-    public Accountables(String id, String name, Integer amount, Boolean visible, String title) {
+    private String ionIcon;
+
+    public Accountables(String id, String name, Integer amount, Boolean visible, String title, String ionIcon) {
         this.id = id;
         this.name = name;
         this.amount = amount;
         this.title = title;
+        this.ionIcon = ionIcon;
         if(visible != null) {
             this.visible = visible;
         }
@@ -88,5 +91,13 @@ public class Accountables {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getIonIcon() {
+        return ionIcon;
+    }
+
+    public void setIonIcon(String ionIcon) {
+        this.ionIcon = ionIcon;
     }
 }
