@@ -4,6 +4,7 @@ import br.com.pedrotfs.storyteller.domain.Book;
 import br.com.pedrotfs.storyteller.repository.BookRepository;
 import br.com.pedrotfs.storyteller.service.BookService;
 import br.com.pedrotfs.storyteller.util.CascadeEraser;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -36,8 +37,10 @@ public class DefaultBookService implements BookService {
         toUpsert.setTitle(book.getTitle());
         toUpsert.setText(book.getText());
         toUpsert.setTime(book.getTime());
-        if(book.getId() != null) {
+        if(book.getId() != null && !book.getId().isEmpty()) {
             toUpsert.setId(book.getId());
+        } else {
+            toUpsert.setId(new ObjectId().toString());
         }
         repository.save(toUpsert);
         return toUpsert;

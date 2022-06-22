@@ -4,6 +4,7 @@ import br.com.pedrotfs.storyteller.domain.Chapter;
 import br.com.pedrotfs.storyteller.repository.ChapterRepository;
 import br.com.pedrotfs.storyteller.service.ChapterService;
 import br.com.pedrotfs.storyteller.util.CascadeEraser;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -35,8 +36,10 @@ public class DefaultChapterService implements ChapterService {
         toUpsert.setImgPath(chapter.getImgPath());
         toUpsert.setTitle(chapter.getTitle());
         toUpsert.setText(chapter.getText());
-        if(chapter.getId() != null) {
+        if(chapter.getId() != null && !chapter.getId().isEmpty()) {
             toUpsert.setId(chapter.getId());
+        } else {
+            toUpsert.setId(new ObjectId().toString());
         }
         repository.save(toUpsert);
         return toUpsert;

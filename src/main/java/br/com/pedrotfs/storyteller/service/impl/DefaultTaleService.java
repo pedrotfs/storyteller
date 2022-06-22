@@ -4,6 +4,7 @@ import br.com.pedrotfs.storyteller.domain.Tale;
 import br.com.pedrotfs.storyteller.repository.TaleRepository;
 import br.com.pedrotfs.storyteller.service.TaleService;
 import br.com.pedrotfs.storyteller.util.CascadeEraser;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -35,8 +36,10 @@ public class DefaultTaleService implements TaleService {
         toUpsert.setImgPath(tale.getImgPath());
         toUpsert.setTitle(tale.getTitle());
         toUpsert.setText(tale.getText());
-        if(tale.getId() != null) {
+        if(tale.getId() != null && !tale.getId().isEmpty()) {
             toUpsert.setId(tale.getId());
+        } else {
+            toUpsert.setId(new ObjectId().toString());
         }
         taleRepository.save(toUpsert);
         return toUpsert;

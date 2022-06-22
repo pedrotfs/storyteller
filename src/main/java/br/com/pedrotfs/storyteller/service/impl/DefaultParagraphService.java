@@ -4,6 +4,7 @@ import br.com.pedrotfs.storyteller.domain.Paragraph;
 import br.com.pedrotfs.storyteller.repository.ParagraphRepository;
 import br.com.pedrotfs.storyteller.service.ParagraphService;
 import br.com.pedrotfs.storyteller.util.CascadeEraser;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -35,8 +36,10 @@ public class DefaultParagraphService implements ParagraphService {
         toUpsert.setImgPath(paragraph.getImgPath());
         toUpsert.setTitle(paragraph.getTitle());
         toUpsert.setText(paragraph.getText());
-        if(paragraph.getId() != null) {
+        if(paragraph.getId() != null && !paragraph.getId().isEmpty()) {
             toUpsert.setId(paragraph.getId());
+        } else {
+            toUpsert.setId(new ObjectId().toString());
         }
         repository.save(toUpsert);
         return toUpsert;

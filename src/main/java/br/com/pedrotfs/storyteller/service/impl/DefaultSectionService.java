@@ -4,6 +4,7 @@ import br.com.pedrotfs.storyteller.domain.Section;
 import br.com.pedrotfs.storyteller.repository.SectionRepository;
 import br.com.pedrotfs.storyteller.service.SectionService;
 import br.com.pedrotfs.storyteller.util.CascadeEraser;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -35,8 +36,10 @@ public class DefaultSectionService implements SectionService {
         toUpsert.setImgPath(section.getImgPath());
         toUpsert.setTitle(section.getTitle());
         toUpsert.setText(section.getText());
-        if(section.getId() != null) {
+        if(section.getId() != null && !section.getId().isEmpty()) {
             toUpsert.setId(section.getId());
+        } else {
+            toUpsert.setId(new ObjectId().toString());
         }
         repository.save(toUpsert);
         return toUpsert;

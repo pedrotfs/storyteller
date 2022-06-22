@@ -3,6 +3,7 @@ package br.com.pedrotfs.storyteller.service.impl;
 import br.com.pedrotfs.storyteller.domain.Accountables;
 import br.com.pedrotfs.storyteller.repository.AccountableRepository;
 import br.com.pedrotfs.storyteller.service.AccountableService;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,8 +23,10 @@ public class DefaultAccountableService implements AccountableService {
             toUpsert = accountables;
         }
         toUpsert.setName(accountables.getName());
-        if(accountables.getId() != null) {
+        if(accountables.getId() != null && !accountables.getId().isEmpty()) {
             toUpsert.setId(accountables.getId());
+        } else {
+            toUpsert.setId(new ObjectId().toString());
         }
         toUpsert.setAmount(accountables.getAmount());
         toUpsert.setVisible(accountables.getVisible());
