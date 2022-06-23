@@ -56,8 +56,8 @@ public class SectionController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @GetMapping("/")
-    public ResponseEntity<Section> find(@RequestParam final String message) {
+    @GetMapping("/{message}")
+    public ResponseEntity<Section> find(@PathVariable final String message) {
         LOG.info("received message to find by " + message);
 
         Section entity = new Section(null, message, null, null, null, null, null);

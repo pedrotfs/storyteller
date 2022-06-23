@@ -53,8 +53,8 @@ public class BookController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @GetMapping("/")
-    public ResponseEntity<Book> find(@RequestParam final String message) {
+    @GetMapping("/{message}")
+    public ResponseEntity<Book> find(@PathVariable final String message) {
         LOG.info("received message to find by " + message);
 
         Book entity = new Book(null, message, null, null, null, null, null, null);

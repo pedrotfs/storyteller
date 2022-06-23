@@ -56,8 +56,8 @@ public class TaleController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @GetMapping("/")
-    public ResponseEntity<Tale> find(@RequestParam final String message) {
+    @GetMapping("/{message}")
+    public ResponseEntity<Tale> find(@PathVariable final String message) {
         LOG.info("received message to find by " + message);
 
         Tale entity = new Tale(null, message, null, null, null, null, null);

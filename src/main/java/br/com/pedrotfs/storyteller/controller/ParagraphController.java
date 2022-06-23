@@ -57,8 +57,8 @@ public class ParagraphController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @GetMapping("/")
-    public ResponseEntity<Paragraph> find(@RequestParam final String message) {
+    @GetMapping("/{message}")
+    public ResponseEntity<Paragraph> find(@PathVariable final String message) {
         LOG.info("received message to find by " + message);
 
         Paragraph entity = new Paragraph(null, message, null, null, null, null, null);

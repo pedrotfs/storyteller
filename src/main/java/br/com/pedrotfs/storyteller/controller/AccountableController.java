@@ -55,8 +55,8 @@ public class AccountableController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @GetMapping("/")
-    public ResponseEntity<Accountables> find(@RequestParam final String message) {
+    @GetMapping("/{message}")
+    public ResponseEntity<Accountables> find(@PathVariable final String message) {
         LOG.info("received message to find by " + message);
 
         Accountables entity = new Accountables(message, null, 0, Boolean.FALSE, null, null);

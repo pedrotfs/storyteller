@@ -55,8 +55,8 @@ public class ChapterController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @GetMapping("/")
-    public ResponseEntity<Chapter> find(@RequestParam final String message) {
+    @GetMapping("/{message}")
+    public ResponseEntity<Chapter> find(@PathVariable final String message) {
         LOG.info("received message to find by " + message);
 
         Chapter entity = new Chapter(null, message, null, null, null, null, null);
