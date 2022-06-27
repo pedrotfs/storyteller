@@ -46,7 +46,7 @@ public class ParagraphController {
         LOG.info("received message to delete");
         LOG.info(message);
 
-        Paragraph entity = gson.fromJson(message, Paragraph.class);
+        Paragraph entity = new Paragraph(null, message, null, null, null, null, null);
         Paragraph result = service.remove(entity);
 
         LOG.info("operation performed. result follows:");

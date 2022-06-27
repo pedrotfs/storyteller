@@ -45,7 +45,7 @@ public class AccountableController {
         LOG.info("received message to delete");
         LOG.info(message);
 
-        Accountables entity = gson.fromJson(message, Accountables.class);
+        Accountables entity = new Accountables(message, null, 0, Boolean.FALSE, null, null);
         Accountables result = service.remove(entity);
         LOG.info("operation performed. result follows:");
         if(result != null) {

@@ -45,7 +45,7 @@ public class ChapterController {
         LOG.info("received message to delete");
         LOG.info(message);
 
-        Chapter entity = gson.fromJson(message, Chapter.class);
+        Chapter entity = new Chapter(null, message, null, null, null, null, null);
         Chapter result = service.remove(entity);
 
         LOG.info("operation performed. result follows:");

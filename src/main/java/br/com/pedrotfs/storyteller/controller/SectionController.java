@@ -45,7 +45,7 @@ public class SectionController {
         LOG.info("received message to delete");
         LOG.info(message);
 
-        Section entity = gson.fromJson(message, Section.class);
+        Section entity = new Section(null, message, null, null, null, null, null);
         Section result = service.remove(entity);
 
         LOG.info("operation performed. result follows:");

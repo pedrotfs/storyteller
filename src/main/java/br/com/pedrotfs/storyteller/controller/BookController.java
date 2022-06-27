@@ -44,7 +44,7 @@ public class BookController {
         LOG.info("received message to delete");
         LOG.info(message);
 
-        Book entity = gson.fromJson(message, Book.class);
+        Book entity = new Book(null, message, null, null, null, null, null, null);
         Book result = service.removeBook(entity);
         LOG.info("operation performed. result follows:");
         if(result != null) {

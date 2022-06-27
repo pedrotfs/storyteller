@@ -181,7 +181,7 @@ class TalemanagerApplicationTests {
 	}
 
 	private void testTaleDelete() {
-		ResponseEntity<Tale> result = taleController.delete(getTaleMessage(ENTITY_ID, ENTITY_NAME, null));
+		ResponseEntity<Tale> result = taleController.delete(ENTITY_ID);
 		Assertions.assertEquals(ENTITY_ID, result.getBody().getId());
 		Assertions.assertNull(taleController.find(getTaleMessage(ENTITY_ID, ENTITY_NAME, null)).getBody());
 	}
@@ -287,7 +287,7 @@ class TalemanagerApplicationTests {
 	}
 
 	private void testBookDelete() {
-		ResponseEntity<Book> result = bookController.delete(getBookMessage(ENTITY_ID, ENTITY_NAME, null));
+		ResponseEntity<Book> result = bookController.delete(ENTITY_ID);
 		Assertions.assertEquals(ENTITY_ID, result.getBody().getId());
 		Assertions.assertNull(bookController.find(getBookMessage(ENTITY_ID, ENTITY_NAME, null)).getBody());
 	}
@@ -394,7 +394,7 @@ class TalemanagerApplicationTests {
 	}
 
 	private void testSectionDelete() {
-		ResponseEntity<Section> result = sectionController.delete(getSectionMessage(ENTITY_ID, ENTITY_NAME, null));
+		ResponseEntity<Section> result = sectionController.delete(ENTITY_ID);
 		Assertions.assertEquals(ENTITY_ID, result.getBody().getId());
 		Assertions.assertNull(sectionController.find(getSectionMessage(ENTITY_ID, ENTITY_NAME, null)).getBody());
 	}
@@ -500,7 +500,7 @@ class TalemanagerApplicationTests {
 	}
 
 	private void testChapterDelete() {
-		ResponseEntity<Chapter> result = chapterController.delete(getChapterMessage(ENTITY_ID, ENTITY_NAME, null));
+		ResponseEntity<Chapter> result = chapterController.delete(ENTITY_ID);
 		Assertions.assertEquals(ENTITY_ID, result.getBody().getId());
 		Assertions.assertNull(chapterController.find(getChapterMessage(ENTITY_ID, ENTITY_NAME, null)).getBody());
 	}
@@ -606,7 +606,7 @@ class TalemanagerApplicationTests {
 	}
 
 	private void testParagraphDelete() {
-		ResponseEntity<Paragraph> result = paragraphController.delete(getParagraphMessage(ENTITY_ID, ENTITY_NAME, null));
+		ResponseEntity<Paragraph> result = paragraphController.delete(ENTITY_ID);
 		Assertions.assertEquals(ENTITY_ID, result.getBody().getId());
 		Assertions.assertNull(paragraphController.find(getParagraphMessage(ENTITY_ID, ENTITY_NAME, null)).getBody());
 	}
@@ -690,7 +690,7 @@ class TalemanagerApplicationTests {
 	}
 
 	private void testAccountablesDelete() {
-		ResponseEntity<Accountables> result = accountableController.delete(getAccountablesMessage(ENTITY_ID, ENTITY_NAME));
+		ResponseEntity<Accountables> result = accountableController.delete(ENTITY_ID);
 		Assertions.assertEquals(ENTITY_ID, result.getBody().getId());
 		Assertions.assertNull(accountableController.find(getAccountablesMessage(ENTITY_ID, ENTITY_NAME)).getBody());
 	}

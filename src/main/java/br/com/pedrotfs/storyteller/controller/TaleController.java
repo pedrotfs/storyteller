@@ -39,13 +39,13 @@ public class TaleController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @DeleteMapping("/")
-    public ResponseEntity<Tale> delete(@RequestBody final String message) {
+    @DeleteMapping("/{message}")
+    public ResponseEntity<Tale> delete(@PathVariable final String message) {
         LOG.info("received message to delete");
         LOG.info(message);
 
+        Tale entity = new Tale(null, message, null, null, null, null, null);
 
-        Tale entity = gson.fromJson(message, Tale.class);
         Tale result = service.removeTale(entity);
 
         LOG.info("operation performed. result follows:");
