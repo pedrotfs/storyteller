@@ -40,8 +40,8 @@ public class AccountableController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @DeleteMapping("/")
-    public ResponseEntity<Accountables> delete(@RequestBody final String message) {
+    @DeleteMapping("/{message}")
+    public ResponseEntity<Accountables> delete(@PathVariable final String message) {
         LOG.info("received message to delete");
         LOG.info(message);
 

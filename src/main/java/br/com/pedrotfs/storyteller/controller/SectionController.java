@@ -40,8 +40,8 @@ public class SectionController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @DeleteMapping("/")
-    public ResponseEntity<Section> delete(@RequestBody final String message) {
+    @DeleteMapping("/{message}")
+    public ResponseEntity<Section> delete(@PathVariable final String message) {
         LOG.info("received message to delete");
         LOG.info(message);
 

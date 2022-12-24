@@ -41,8 +41,8 @@ public class ParagraphController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @DeleteMapping("/")
-    public ResponseEntity<Paragraph> delete(@RequestBody final String message) {
+    @DeleteMapping("/{message}")
+    public ResponseEntity<Paragraph> delete(@PathVariable final String message) {
         LOG.info("received message to delete");
         LOG.info(message);
 

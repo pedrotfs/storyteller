@@ -40,8 +40,8 @@ public class ChapterController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @DeleteMapping("/")
-    public ResponseEntity<Chapter> delete(@RequestBody final String message) {
+    @DeleteMapping("/{message}")
+    public ResponseEntity<Chapter> delete(@PathVariable final String message) {
         LOG.info("received message to delete");
         LOG.info(message);
 
