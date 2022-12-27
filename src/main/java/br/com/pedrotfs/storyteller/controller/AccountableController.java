@@ -24,6 +24,41 @@ public class AccountableController {
 
     private Logger LOG = LoggerFactory.getLogger(AccountableController.class);
 
+    @GetMapping("/{message}")
+    public ResponseEntity<Accountables> find(@PathVariable final String message) {
+        LOG.info("received message to find by " + message);
+
+        Accountables entity = new Accountables(message, null, 0, Boolean.FALSE, null, null);
+        Accountables result = service.find(entity);
+        LOG.info("operation performed. result follows:");
+        if(result != null) {
+            LOG.info(result.toString());
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<Accountables>> findAll() {
+        LOG.info("received message to find all");
+
+        List<Accountables> all = service.findAll();
+
+        LOG.info("operation performed. result follows:" + all.size());
+        return new ResponseEntity<>(all, HttpStatus.OK);
+    }
+
+    @GetMapping("/accountables-for-entity/{message}")
+    public ResponseEntity<List<Accountables>> getAccountablesForEntity(@PathVariable final String message) {
+        LOG.info("searching child accountables for object id " + message);
+
+        List<Accountables> accountables = service.findAndAccumulateForNode(message);
+        LOG.info("operation performed. result follows:" + accountables.size());
+        return new ResponseEntity<>(accountables, HttpStatus.OK);
+
+    }
+
     @PostMapping("/")
     @PutMapping("/")
     public ResponseEntity<Accountables> upsert(@RequestBody final String message) {
@@ -55,29 +90,6 @@ public class AccountableController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @GetMapping("/{message}")
-    public ResponseEntity<Accountables> find(@PathVariable final String message) {
-        LOG.info("received message to find by " + message);
 
-        Accountables entity = new Accountables(message, null, 0, Boolean.FALSE, null, null);
-        Accountables result = service.find(entity);
-        LOG.info("operation performed. result follows:");
-        if(result != null) {
-            LOG.info(result.toString());
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @GetMapping("/all")
-    public ResponseEntity<List<Accountables>> findAll() {
-        LOG.info("received message to find all");
-
-        List<Accountables> all = service.findAll();
-
-        LOG.info("operation performed. result follows:" + all.size());
-        return new ResponseEntity<>(all, HttpStatus.OK);
-    }
 
 }

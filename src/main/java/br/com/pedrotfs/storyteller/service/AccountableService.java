@@ -13,4 +13,6 @@ public interface AccountableService {
     Accountables find(Accountables accountable);
 
     List<Accountables> findAll();
+
+    List<Accountables> findAndAccumulateForNode(String id);
 }
