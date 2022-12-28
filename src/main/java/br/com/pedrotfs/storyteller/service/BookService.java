@@ -1,6 +1,7 @@
 package br.com.pedrotfs.storyteller.service;
 
 import br.com.pedrotfs.storyteller.domain.Book;
+import br.com.pedrotfs.storyteller.util.dto.ParentDTO;
 
 import java.util.List;
 
@@ -17,4 +18,6 @@ public interface BookService {
     Book removeSection(Book book, String section);
 
     List<Book> findAll();
+
+    ParentDTO findParent(String id);
 }

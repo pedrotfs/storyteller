@@ -1,6 +1,7 @@
 package br.com.pedrotfs.storyteller.service;
 
 import br.com.pedrotfs.storyteller.domain.Paragraph;
+import br.com.pedrotfs.storyteller.util.dto.ParentDTO;
 
 import java.util.List;
 

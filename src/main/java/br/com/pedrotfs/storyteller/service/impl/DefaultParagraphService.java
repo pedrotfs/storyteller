@@ -1,9 +1,12 @@
 package br.com.pedrotfs.storyteller.service.impl;
 
+import br.com.pedrotfs.storyteller.domain.Book;
+import br.com.pedrotfs.storyteller.domain.Chapter;
 import br.com.pedrotfs.storyteller.domain.Paragraph;
 import br.com.pedrotfs.storyteller.repository.ParagraphRepository;
 import br.com.pedrotfs.storyteller.service.ParagraphService;
 import br.com.pedrotfs.storyteller.util.CascadeEraser;
+import br.com.pedrotfs.storyteller.util.dto.ParentDTO;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

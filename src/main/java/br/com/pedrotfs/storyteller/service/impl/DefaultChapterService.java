@@ -1,9 +1,11 @@
 package br.com.pedrotfs.storyteller.service.impl;
 
 import br.com.pedrotfs.storyteller.domain.Chapter;
+import br.com.pedrotfs.storyteller.domain.Paragraph;
 import br.com.pedrotfs.storyteller.repository.ChapterRepository;
 import br.com.pedrotfs.storyteller.service.ChapterService;
 import br.com.pedrotfs.storyteller.util.CascadeEraser;
+import br.com.pedrotfs.storyteller.util.dto.ParentDTO;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -82,6 +84,12 @@ public class DefaultChapterService implements ChapterService {
             repository.save(entity);
         }
         return entity;
+    }
+
+    @Override
+    public ParentDTO findParent(String id) {
+        Optional<Chapter> bySectionsContaining = repository.findByParagraphsContaining(id);
+        return bySectionsContaining.map(chapter -> new ParentDTO(chapter.getId(), Chapter.class.getSimpleName())).orElse(null);
     }
 
     @Override

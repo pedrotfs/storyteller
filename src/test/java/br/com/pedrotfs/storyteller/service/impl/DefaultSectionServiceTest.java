@@ -1,13 +1,16 @@
 package br.com.pedrotfs.storyteller.service.impl;
 
 import br.com.pedrotfs.storyteller.domain.Section;
+import br.com.pedrotfs.storyteller.domain.Tale;
 import br.com.pedrotfs.storyteller.repository.SectionRepository;
 import br.com.pedrotfs.storyteller.util.CascadeEraser;
+import br.com.pedrotfs.storyteller.util.dto.ParentDTO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
@@ -126,6 +129,16 @@ class DefaultSectionServiceTest {
 
         Assertions.assertEquals(service.removeChapter(testEntity, CHAPTER), returnTestEntity);
         Assertions.assertEquals(service.removeChapter(testEntity, CHAPTER).getChapter().size(), returnTestEntity.getChapter().size());
+    }
+
+    @Test
+    public void findIfParent() {
+        Section section = Mockito.mock(Section.class);
+        doReturn(ID).when(section).getId();
+        doReturn(Optional.of(section)).when(repo).findByChapterContaining(ID);
+        ParentDTO parent = service.findParent(ID);
+        Assertions.assertEquals(parent.getParentId(), ID);
+        Assertions.assertEquals(parent.getParentType(), Section.class.getSimpleName());
     }
 
     private Section createTestEntity(final String name, final String id, final String title, final String sampleText, final String orderIndex) {

@@ -3,11 +3,13 @@ package br.com.pedrotfs.storyteller.service.impl;
 import br.com.pedrotfs.storyteller.domain.Tale;
 import br.com.pedrotfs.storyteller.repository.TaleRepository;
 import br.com.pedrotfs.storyteller.util.CascadeEraser;
+import br.com.pedrotfs.storyteller.util.dto.ParentDTO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
@@ -127,6 +129,16 @@ class DefaultTaleServiceTest {
 
         Assertions.assertEquals(defaultTaleService.addBook(testTale, BOOK), returnTestTale);
         Assertions.assertEquals(defaultTaleService.addBook(testTale, BOOK).getBooks().size(), returnTestTale.getBooks().size());
+    }
+
+    @Test
+    public void findIfParent() {
+        Tale tale = Mockito.mock(Tale.class);
+        doReturn(TALE_ID).when(tale).getId();
+        doReturn(Optional.of(tale)).when(taleRepository).findByBooksContaining(TALE_ID);
+        ParentDTO parent = defaultTaleService.findParent(TALE_ID);
+        Assertions.assertEquals(parent.getParentId(), TALE_ID);
+        Assertions.assertEquals(parent.getParentType(), Tale.class.getSimpleName());
     }
 
     private Tale createTestTale(final String name, final String id, final String owner, final String title, final String sampleText) {

@@ -1,9 +1,11 @@
 package br.com.pedrotfs.storyteller.service.impl;
 
+import br.com.pedrotfs.storyteller.domain.Book;
 import br.com.pedrotfs.storyteller.domain.Tale;
 import br.com.pedrotfs.storyteller.repository.TaleRepository;
 import br.com.pedrotfs.storyteller.service.TaleService;
 import br.com.pedrotfs.storyteller.util.CascadeEraser;
+import br.com.pedrotfs.storyteller.util.dto.ParentDTO;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -87,6 +89,12 @@ public class DefaultTaleService implements TaleService {
             taleRepository.save(taleToUpsert);
         }
         return taleToUpsert;
+    }
+
+    @Override
+    public ParentDTO findParent(String id) {
+        Optional<Tale> bySectionsContaining = taleRepository.findByBooksContaining(id);
+        return bySectionsContaining.map(tale -> new ParentDTO(tale.getId(), Tale.class.getSimpleName())).orElse(null);
     }
 
     public TaleRepository getTaleRepository() {

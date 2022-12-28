@@ -4,6 +4,7 @@ import br.com.pedrotfs.storyteller.domain.Book;
 import br.com.pedrotfs.storyteller.repository.BookRepository;
 import br.com.pedrotfs.storyteller.service.BookService;
 import br.com.pedrotfs.storyteller.util.CascadeEraser;
+import br.com.pedrotfs.storyteller.util.dto.ParentDTO;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -83,6 +84,12 @@ public class DefaultBookService implements BookService {
             repository.save(entity);
         }
         return entity;
+    }
+
+    @Override
+    public ParentDTO findParent(String id) {
+        Optional<Book> bySectionsContaining = repository.findBySectionsContaining(id);
+        return bySectionsContaining.map(book -> new ParentDTO(book.getId(), Book.class.getSimpleName())).orElse(null);
     }
 
     @Override

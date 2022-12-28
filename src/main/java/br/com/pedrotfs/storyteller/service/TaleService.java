@@ -1,8 +1,10 @@
 package br.com.pedrotfs.storyteller.service;
 
 import br.com.pedrotfs.storyteller.domain.Tale;
+import br.com.pedrotfs.storyteller.util.dto.ParentDTO;
 
 import java.util.List;
+
 
 public interface TaleService {
 
@@ -17,4 +19,6 @@ public interface TaleService {
     Tale addBook(Tale tale, String book);
 
     Tale removeBook(Tale tale, String book);
+
+    ParentDTO findParent(String id);
 }
