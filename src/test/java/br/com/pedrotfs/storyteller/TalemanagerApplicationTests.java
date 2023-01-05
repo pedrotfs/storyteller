@@ -9,6 +9,7 @@ import br.com.pedrotfs.storyteller.util.DatabaseCsvLoader;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.ResponseEntity;
@@ -29,37 +30,13 @@ class TalemanagerApplicationTests {
 	private AccountableController accountableController;
 
 	@Autowired
-	private BookController bookController;
-
-	@Autowired
-	private ChapterController chapterController;
-
-	@Autowired
-	private ParagraphController paragraphController;
-
-	@Autowired
-	private SectionController sectionController;
-
-	@Autowired
-	private TaleController taleController;
+	private RegistryController registryController;
 
 	@Autowired
 	private AccountableRepository accountableRepository;
 
 	@Autowired
-	private BookRepository bookRepository;
-
-	@Autowired
-	private ChapterRepository chapterRepository;
-
-	@Autowired
-	private ParagraphRepository paragraphRepository;
-
-	@Autowired
-	private SectionRepository sectionRepository;
-
-	@Autowired
-	private TaleRepository taleRepository;
+	private RegistryRepository registryRepository;
 
 	@Autowired
 	private DatabaseCsvDumper databaseCsvDumper;
@@ -73,8 +50,6 @@ class TalemanagerApplicationTests {
 
 	private final static String ENTITY_CHILD_ID = "d04b98f48e8f8bcc15c6ae5ac050801cd6dcfd428fb5f9e65c4e16e7807340fc";
 
-	private final static String ENTITY_CHILD_ID_2 = "d04b98f48e8f8bcc15c6ae5ac050801cd6dcfd428fb5f9e65c4e16e7807340fd";
-
 	private final static String ENTITY_ID_DUPLICATE = "d04b98f48e8f8bcc15c6ae5ac050801cd6dcfd428fb5f9e65c4e16e7807340fb";
 
 	private final static String ENTITY_NAME = "cateano";
@@ -85,7 +60,6 @@ class TalemanagerApplicationTests {
 
 	@Test
 	void contextLoads() {
-
 		clearDb();
 
 		testDomain();
@@ -95,108 +69,129 @@ class TalemanagerApplicationTests {
 	}
 
 	private void testDomain() {
-		testTale();
-		testBook();
-		testSection();
-		testChapter();
-		testParagraph();
-	}
-
-	private void testTale() {
-		testTaleInsert();
-		testTaleUpdate();
-		testTaleFindBy();
-		testTaleFindAll();
-		testTaleAddChild();
-		testTaleDelChild();
-		testTaleDelete();
+		testRegistry();
 		testAccountables();
 	}
 
-	private void testTaleInsert() {
-		ResponseEntity<Tale> result = taleController.upsert(getTaleMessage(ENTITY_ID, ENTITY_NAME, null));
+	private void testRegistry() {
+		testRegistryInsert();
+		testRegistryUpdate();
+		testRegistryFindBy();
+		testRegistryFindAll();
+		testRegistryAddChild();
+		testRegistryDelChild();
+		testRegistryAddAccountable();
+		testRegistryDelAccountable();
+		testRegistryDelete();
+	}
 
-		List<Tale> all = taleRepository.findAll();
+	private void testRegistryInsert() {
+		ResponseEntity<Registry> result = registryController.upsert(getRegistryMessage(ENTITY_ID, ENTITY_NAME, null, null));
+
+		List<Registry> all = registryRepository.findAll();
 		Assertions.assertEquals(all.size(), 1);
 
-		Tale tale = all.get(0);
-		Assertions.assertEquals(tale.getId(), ENTITY_ID);
-		Assertions.assertEquals(tale.getName(), ENTITY_NAME);
+		Registry registry = all.get(0);
+		Assertions.assertEquals(registry.getId(), ENTITY_ID);
+		Assertions.assertEquals(registry.getName(), ENTITY_NAME);
 
-		Assertions.assertEquals(result.getBody(), tale);
+		Assertions.assertEquals(result.getBody(), registry);
 		Assertions.assertEquals(result.getStatusCodeValue(), STATUS_CODE_OK);
 	}
 
-	private void testTaleUpdate() {
-		ResponseEntity<Tale> result = taleController.upsert(getTaleMessage(ENTITY_ID, ENTITY_NAME_UPDATE, null));
+	private void testRegistryUpdate() {
+		ResponseEntity<Registry> result = registryController.upsert(getRegistryMessage(ENTITY_ID, ENTITY_NAME_UPDATE, null, null));
 
-		List<Tale> all = taleRepository.findAll();
+		List<Registry> all = registryRepository.findAll();
 		Assertions.assertEquals(all.size(), 1);
 
-		Tale tale = all.get(0);
-		Assertions.assertEquals(tale.getId(), ENTITY_ID);
-		Assertions.assertEquals(tale.getName(), ENTITY_NAME_UPDATE);
+		Registry registry = all.get(0);
+		Assertions.assertEquals(registry.getId(), ENTITY_ID);
+		Assertions.assertEquals(registry.getName(), ENTITY_NAME_UPDATE);
 
-		Assertions.assertEquals(result.getBody(), tale);
+		Assertions.assertEquals(result.getBody(), registry);
 		Assertions.assertEquals(result.getStatusCodeValue(), STATUS_CODE_OK);
 	}
 
-	private void testTaleFindBy() {
-		ResponseEntity<Tale> result = taleController.find(ENTITY_ID);
+	private void testRegistryFindBy() {
+		ResponseEntity<Registry> result = registryController.find(ENTITY_ID);
 		Assertions.assertNotNull(result.getBody());
 		Assertions.assertEquals(result.getBody().getId(), ENTITY_ID);
-		Assertions.assertTrue(taleRepository.findById(ENTITY_ID).isPresent());
-		Assertions.assertEquals(result.getBody(), taleRepository.findById(ENTITY_ID).get());
+		Assertions.assertTrue(registryRepository.findById(ENTITY_ID).isPresent());
+		Assertions.assertEquals(result.getBody(), registryRepository.findById(ENTITY_ID).get());
 	}
 
-	private void testTaleFindAll() {
-		taleController.upsert(getTaleMessage(ENTITY_ID_DUPLICATE, ENTITY_NAME, null));
+	private void testRegistryFindAll() {
+		registryController.upsert(getRegistryMessage(ENTITY_ID_DUPLICATE, ENTITY_NAME, null, null));
 
-		List<Tale> all = taleRepository.findAll();
+		List<Registry> all = registryRepository.findAll();
 		Assertions.assertEquals(all.size(), 2);
-		Tale tale1 = taleRepository.findById(ENTITY_ID).get();
-		Tale tale2 = taleRepository.findById(ENTITY_ID).get();
-		Assertions.assertTrue(all.contains(tale1));
-		Assertions.assertTrue(all.contains(tale2));
+		Registry registry = registryRepository.findById(ENTITY_ID).get();
+		Registry registry2 = registryRepository.findById(ENTITY_ID).get();
+		Assertions.assertTrue(all.contains(registry));
+		Assertions.assertTrue(all.contains(registry2));
 	}
 
-	private void testTaleAddChild() {
+	private void testRegistryAddChild() {
 		List<String> children = new ArrayList<>();
 		children.add(ENTITY_CHILD_ID);
 
-		ResponseEntity<Tale> result = taleController.addChild(getTaleMessage(ENTITY_ID, ENTITY_NAME_UPDATE, children));
+		ResponseEntity<Registry> result = registryController.addChild(getRegistryMessage(ENTITY_ID, ENTITY_NAME_UPDATE, children, null));
 		Assertions.assertEquals(result.getBody().getId(), ENTITY_ID);
-		Tale tale = taleRepository.findById(ENTITY_ID).get();
-		Assertions.assertEquals(tale.getBooks().size(), 1);
-		Assertions.assertEquals(tale.getBooks().get(0), ENTITY_CHILD_ID);
+		Registry registry = registryRepository.findById(ENTITY_ID).get();
+		Assertions.assertEquals(registry.getChilds().size(), 1);
+		Assertions.assertEquals(registry.getChilds().get(0), ENTITY_CHILD_ID);
 	}
 
-	private void testTaleDelChild() {
+	private void testRegistryDelChild() {
 		List<String> children = new ArrayList<>();
 		children.add(ENTITY_CHILD_ID);
 
-		ResponseEntity<Tale> result = taleController.delChild(getTaleMessage(ENTITY_ID, ENTITY_NAME_UPDATE, children));
-		Tale tale = taleRepository.findById(ENTITY_ID).get();
-		Assertions.assertEquals(tale.getBooks().size(), 0);
+		ResponseEntity<Registry> result = registryController.delChild(getRegistryMessage(ENTITY_ID, ENTITY_NAME_UPDATE, children, null));
+		Registry registry = registryRepository.findById(ENTITY_ID).get();
+		Assertions.assertEquals(registry.getChilds().size(), 0);
 	}
 
-	private void testTaleDelete() {
-		ResponseEntity<Tale> result = taleController.delete(ENTITY_ID);
+	private void testRegistryAddAccountable() {
+		List<String> children = new ArrayList<>();
+		children.add(ENTITY_CHILD_ID);
+		accountableController.upsert(getAccountablesMessage(ENTITY_CHILD_ID, ENTITY_CHILD_ID));
+		ResponseEntity<Registry> result = registryController.addAccountable(getRegistryMessage(ENTITY_ID, ENTITY_NAME_UPDATE, null, children));
+		Assertions.assertEquals(result.getBody().getId(), ENTITY_ID);
+		Registry registry = registryRepository.findById(ENTITY_ID).get();
+		Assertions.assertEquals(registry.getAccountables().size(), 1);
+		Assertions.assertEquals(registry.getAccountables().get(0), ENTITY_CHILD_ID);
+	}
+
+	private void testRegistryDelAccountable() {
+		List<String> children = new ArrayList<>();
+		children.add(ENTITY_CHILD_ID);
+
+		ResponseEntity<Registry> result = registryController.delAccountable(getRegistryMessage(ENTITY_ID, ENTITY_NAME_UPDATE, null, children));
+		Registry registry = registryRepository.findById(ENTITY_ID).get();
+		Assertions.assertEquals(registry.getAccountables().size(), 0);
+		Assertions.assertEquals(0 , accountableRepository.findAll().size());
+	}
+
+	private void testRegistryDelete() {
+		ResponseEntity<Registry> result = registryController.delete(ENTITY_ID);
 		Assertions.assertEquals(ENTITY_ID, result.getBody().getId());
-		Assertions.assertNull(taleController.find(getTaleMessage(ENTITY_ID, ENTITY_NAME, null)).getBody());
+		Assertions.assertNull(registryController.find(getRegistryMessage(ENTITY_ID, ENTITY_NAME, null, null)).getBody());
 	}
 
-	private String getTaleMessage(final String id, final String name, List<String> children) {
-		StringBuilder stringBuilder = new StringBuilder("{ " +
-				"\"id\":\"" + id + "\"," +
-				"\"name\":\"" + name + "\"," +
-				"\"title\":\"Caetano's growth tales and fantastic friends\"," +
-				"\"imgPath\":\"caetano\"," +
-				"\"text\":\"this will be a series of books regarding caetano's experiences\"," +
-				"\"owner\":\"pedro.silva\"");
+	private String getRegistryMessage(final String id, final String name, List<String> children, List<String> accountables) {
+		StringBuilder stringBuilder = new StringBuilder("{ \n" +
+				"    \"id\": \"" + id + "\",\n" +
+				"    \"name\": \"" + name + "\",\n" +
+				"    \"title\": \"test title\",\n" +
+				"    \"imgPath\": \"testtitle01.png\",\n" +
+				"    \"text\": \"text is being texted here\",\n" +
+				"    \"type\": \"Chapter\",\n" +
+				"    \"orderIndex\": \"a\",\n" +
+				"    \"owner\": \"Admin\"");
 		if(children != null) {
 			stringBuilder.append(", \n");
-			stringBuilder.append("\"books\": [ \n");
+			stringBuilder.append("\"childs\": [ \n");
 			int i = 1;
 			for(String child : children) {
 				stringBuilder.append("\"").append(child).append("\"");
@@ -206,426 +201,13 @@ class TalemanagerApplicationTests {
 			}
 			stringBuilder.append(" ] \n");
 		}
-		stringBuilder.append("\n}");
-		return stringBuilder.toString();
-	}
-
-	private void testBook() {
-		testBookInsert();
-		testBookUpdate();
-		testBookFindBy();
-		testBookFindAll();
-		testBookAddChild();
-		testBookDelChild();
-		testBookDelete();
-	}
-
-	private void testBookInsert() {
-		ResponseEntity<Book> result = bookController.upsert(getBookMessage(ENTITY_ID, ENTITY_NAME, null));
-		List<Book> all = bookRepository.findAll();
-		Assertions.assertEquals(all.size(), 1);
-
-		Book entity = all.get(0);
-		Assertions.assertEquals(entity.getId(), ENTITY_ID);
-		Assertions.assertEquals(entity.getName(), ENTITY_NAME);
-
-		Assertions.assertEquals(result.getBody(), entity);
-		Assertions.assertEquals(result.getStatusCodeValue(), STATUS_CODE_OK);
-	}
-
-	private void testBookUpdate() {
-		ResponseEntity<Book> result = bookController.upsert(getBookMessage(ENTITY_ID, ENTITY_NAME_UPDATE, null));
-
-		List<Book> all = bookRepository.findAll();
-		Assertions.assertEquals(all.size(), 1);
-
-		Book entity = all.get(0);
-		Assertions.assertEquals(entity.getId(), ENTITY_ID);
-		Assertions.assertEquals(entity.getName(), ENTITY_NAME_UPDATE);
-
-		Assertions.assertEquals(result.getBody(), entity);
-		Assertions.assertEquals(result.getStatusCodeValue(), STATUS_CODE_OK);
-	}
-
-	private void testBookFindBy() {
-		ResponseEntity<Book> result = bookController.find(ENTITY_ID);
-		Assertions.assertNotNull(result.getBody());
-		Assertions.assertEquals(result.getBody().getId(), ENTITY_ID);
-		Assertions.assertTrue(bookRepository.findById(ENTITY_ID).isPresent());
-		Assertions.assertEquals(result.getBody(), bookRepository.findById(ENTITY_ID).get());
-	}
-
-	private void testBookFindAll() {
-		bookController.upsert(getBookMessage(ENTITY_ID_DUPLICATE, ENTITY_NAME, null));
-
-		List<Book> all = bookRepository.findAll();
-		Assertions.assertEquals(all.size(), 2);
-		Book entity1 = bookRepository.findById(ENTITY_ID).get();
-		Book entity2 = bookRepository.findById(ENTITY_ID).get();
-		Assertions.assertTrue(all.contains(entity1));
-		Assertions.assertTrue(all.contains(entity2));
-	}
-
-	private void testBookAddChild() {
-		List<String> children = new ArrayList<>();
-		children.add(ENTITY_CHILD_ID);
-
-		ResponseEntity<Book> result = bookController.addChild(getBookMessage(ENTITY_ID, ENTITY_NAME_UPDATE, children));
-		Assertions.assertEquals(result.getBody().getId(), ENTITY_ID);
-		Book entity = bookRepository.findById(ENTITY_ID).get();
-		Assertions.assertEquals(entity.getSections().size(), 1);
-		Assertions.assertEquals(entity.getSections().get(0), ENTITY_CHILD_ID);
-	}
-
-	private void testBookDelChild() {
-		List<String> children = new ArrayList<>();
-		children.add(ENTITY_CHILD_ID);
-
-		ResponseEntity<Book> result = bookController.delChild(getBookMessage(ENTITY_ID, ENTITY_NAME_UPDATE, children));
-		Book entity = bookRepository.findById(ENTITY_ID).get();
-		Assertions.assertEquals(entity.getSections().size(), 0);
-	}
-
-	private void testBookDelete() {
-		ResponseEntity<Book> result = bookController.delete(ENTITY_ID);
-		Assertions.assertEquals(ENTITY_ID, result.getBody().getId());
-		Assertions.assertNull(bookController.find(getBookMessage(ENTITY_ID, ENTITY_NAME, null)).getBody());
-	}
-
-	private String getBookMessage(final String id, final String name, List<String> children) {
-		StringBuilder stringBuilder = new StringBuilder("{ " +
-				"\"id\":\"" + id + "\"," +
-				"\"name\":\"" + name + "\"," +
-				"\"title\":\"Caetano's growth tales and fantastic friends\"," +
-				"\"imgPath\":\"caetano\"," +
-				"\"text\":\"this will be a series of books regarding caetano's experiences\"," +
-				"\"orderIndex\":\"1\"," +
-				"\"time\":\"5h\"");
-		if(children != null) {
-			stringBuilder.append(", \n");
-			stringBuilder.append("\"sections\": [ \n");
-			int i = 1;
-			for(String child : children) {
-				stringBuilder.append("\"").append(child).append("\"");
-				if(i++ < children.size()) {
-					stringBuilder.append(",");
-				}
-			}
-			stringBuilder.append(" ] \n");
-		}
-		stringBuilder.append("\n}");
-		return stringBuilder.toString();
-	}
-
-	private void testSection() {
-		testSectionInsert();
-		testSectionUpdate();
-		testSectionFindBy();
-		testSectionFindAll();
-		testSectionAddChild();
-		testSectionDelChild();
-		testSectionDelete();
-	}
-
-	private void testSectionInsert() {
-		ResponseEntity<Section> result = sectionController.upsert(getSectionMessage(ENTITY_ID, ENTITY_NAME, null));
-		List<Section> all = sectionRepository.findAll();
-		Assertions.assertEquals(all.size(), 1);
-
-		Section entity = all.get(0);
-		Assertions.assertEquals(entity.getId(), ENTITY_ID);
-		Assertions.assertEquals(entity.getName(), ENTITY_NAME);
-
-		Assertions.assertEquals(result.getBody(), entity);
-		Assertions.assertEquals(result.getStatusCodeValue(), STATUS_CODE_OK);
-	}
-
-	private void testSectionUpdate() {
-		ResponseEntity<Section> result = sectionController.upsert(getSectionMessage(ENTITY_ID, ENTITY_NAME_UPDATE, null));
-
-		List<Section> all = sectionRepository.findAll();
-		Assertions.assertEquals(all.size(), 1);
-
-		Section entity = all.get(0);
-		Assertions.assertEquals(entity.getId(), ENTITY_ID);
-		Assertions.assertEquals(entity.getName(), ENTITY_NAME_UPDATE);
-
-		Assertions.assertEquals(result.getBody(), entity);
-		Assertions.assertEquals(result.getStatusCodeValue(), STATUS_CODE_OK);
-	}
-
-	private void testSectionFindBy() {
-		ResponseEntity<Section> result = sectionController.find(ENTITY_ID);
-		Assertions.assertNotNull(result.getBody());
-		Assertions.assertEquals(result.getBody().getId(), ENTITY_ID);
-		Assertions.assertTrue(sectionRepository.findById(ENTITY_ID).isPresent());
-		Assertions.assertEquals(result.getBody(), sectionRepository.findById(ENTITY_ID).get());
-	}
-
-	private void testSectionFindAll() {
-		sectionController.upsert(getSectionMessage(ENTITY_ID_DUPLICATE, ENTITY_NAME, null));
-
-		List<Section> all = sectionRepository.findAll();
-		Assertions.assertEquals(all.size(), 2);
-		Section entity1 = sectionRepository.findById(ENTITY_ID).get();
-		Section entity2 = sectionRepository.findById(ENTITY_ID).get();
-		Assertions.assertTrue(all.contains(entity1));
-		Assertions.assertTrue(all.contains(entity2));
-	}
-
-	private void testSectionAddChild() {
-		List<String> children = new ArrayList<>();
-		children.add(ENTITY_CHILD_ID);
-
-		ResponseEntity<Section> result = sectionController.addChild(getSectionMessage(ENTITY_ID, ENTITY_NAME_UPDATE, children));
-		Assertions.assertEquals(result.getBody().getId(), ENTITY_ID);
-		Section entity = sectionRepository.findById(ENTITY_ID).get();
-		Assertions.assertEquals(entity.getChapter().size(), 1);
-		Assertions.assertEquals(entity.getChapter().get(0), ENTITY_CHILD_ID);
-	}
-
-	private void testSectionDelChild() {
-		List<String> children = new ArrayList<>();
-		children.add(ENTITY_CHILD_ID);
-
-		ResponseEntity<Section> result = sectionController.delChild(getSectionMessage(ENTITY_ID, ENTITY_NAME_UPDATE, children));
-		Section entity = sectionRepository.findById(ENTITY_ID).get();
-		Assertions.assertEquals(entity.getChapter().size(), 0);
-	}
-
-	private void testSectionDelete() {
-		ResponseEntity<Section> result = sectionController.delete(ENTITY_ID);
-		Assertions.assertEquals(ENTITY_ID, result.getBody().getId());
-		Assertions.assertNull(sectionController.find(getSectionMessage(ENTITY_ID, ENTITY_NAME, null)).getBody());
-	}
-
-	private String getSectionMessage(final String id, final String name, List<String> children) {
-		StringBuilder stringBuilder = new StringBuilder("{ " +
-				"\"id\":\"" + id + "\"," +
-				"\"name\":\"" + name + "\"," +
-				"\"title\":\"Caetano's growth tales and fantastic friends\"," +
-				"\"imgPath\":\"caetano\"," +
-				"\"text\":\"this will be a series of sections regarding caetano's experiences\"," +
-				"\"orderIndex\":\"1\"");
-		if(children != null) {
-			stringBuilder.append(", \n");
-			stringBuilder.append("\"chapter\": [ \n");
-			int i = 1;
-			for(String child : children) {
-				stringBuilder.append("\"").append(child).append("\"");
-				if(i++ < children.size()) {
-					stringBuilder.append(",");
-				}
-			}
-			stringBuilder.append(" ] \n");
-		}
-		stringBuilder.append("\n}");
-		return stringBuilder.toString();
-	}
-
-	private void testChapter() {
-		testChapterInsert();
-		testChapterUpdate();
-		testChapterFindBy();
-		testChapterFindAll();
-		testChapterAddChild();
-		testChapterDelChild();
-		testChapterDelete();
-	}
-
-	private void testChapterInsert() {
-		ResponseEntity<Chapter> result = chapterController.upsert(getChapterMessage(ENTITY_ID, ENTITY_NAME, null));
-		List<Chapter> all = chapterRepository.findAll();
-		Assertions.assertEquals(all.size(), 1);
-
-		Chapter entity = all.get(0);
-		Assertions.assertEquals(entity.getId(), ENTITY_ID);
-		Assertions.assertEquals(entity.getName(), ENTITY_NAME);
-
-		Assertions.assertEquals(result.getBody(), entity);
-		Assertions.assertEquals(result.getStatusCodeValue(), STATUS_CODE_OK);
-	}
-
-	private void testChapterUpdate() {
-		ResponseEntity<Chapter> result = chapterController.upsert(getChapterMessage(ENTITY_ID, ENTITY_NAME_UPDATE, null));
-
-		List<Chapter> all = chapterRepository.findAll();
-		Assertions.assertEquals(all.size(), 1);
-
-		Chapter entity = all.get(0);
-		Assertions.assertEquals(entity.getId(), ENTITY_ID);
-		Assertions.assertEquals(entity.getName(), ENTITY_NAME_UPDATE);
-
-		Assertions.assertEquals(result.getBody(), entity);
-		Assertions.assertEquals(result.getStatusCodeValue(), STATUS_CODE_OK);
-	}
-
-	private void testChapterFindBy() {
-		ResponseEntity<Chapter> result = chapterController.find(ENTITY_ID);
-		Assertions.assertNotNull(result.getBody());
-		Assertions.assertEquals(result.getBody().getId(), ENTITY_ID);
-		Assertions.assertTrue(chapterRepository.findById(ENTITY_ID).isPresent());
-		Assertions.assertEquals(result.getBody(), chapterRepository.findById(ENTITY_ID).get());
-	}
-
-	private void testChapterFindAll() {
-		chapterController.upsert(getChapterMessage(ENTITY_ID_DUPLICATE, ENTITY_NAME, null));
-
-		List<Chapter> all = chapterRepository.findAll();
-		Assertions.assertEquals(all.size(), 2);
-		Chapter entity1 = chapterRepository.findById(ENTITY_ID).get();
-		Chapter entity2 = chapterRepository.findById(ENTITY_ID).get();
-		Assertions.assertTrue(all.contains(entity1));
-		Assertions.assertTrue(all.contains(entity2));
-	}
-
-	private void testChapterAddChild() {
-		List<String> children = new ArrayList<>();
-		children.add(ENTITY_CHILD_ID);
-
-		ResponseEntity<Chapter> result = chapterController.addChild(getChapterMessage(ENTITY_ID, ENTITY_NAME_UPDATE, children));
-		Assertions.assertEquals(result.getBody().getId(), ENTITY_ID);
-		Chapter entity = chapterRepository.findById(ENTITY_ID).get();
-		Assertions.assertEquals(entity.getParagraphs().size(), 1);
-		Assertions.assertEquals(entity.getParagraphs().get(0), ENTITY_CHILD_ID);
-	}
-
-	private void testChapterDelChild() {
-		List<String> children = new ArrayList<>();
-		children.add(ENTITY_CHILD_ID);
-
-		ResponseEntity<Chapter> result = chapterController.delChild(getChapterMessage(ENTITY_ID, ENTITY_NAME_UPDATE, children));
-		Chapter entity = chapterRepository.findById(ENTITY_ID).get();
-		Assertions.assertEquals(entity.getParagraphs().size(), 0);
-	}
-
-	private void testChapterDelete() {
-		ResponseEntity<Chapter> result = chapterController.delete(ENTITY_ID);
-		Assertions.assertEquals(ENTITY_ID, result.getBody().getId());
-		Assertions.assertNull(chapterController.find(getChapterMessage(ENTITY_ID, ENTITY_NAME, null)).getBody());
-	}
-
-	private String getChapterMessage(final String id, final String name, List<String> children) {
-		StringBuilder stringBuilder = new StringBuilder("{ " +
-				"\"id\":\"" + id + "\"," +
-				"\"name\":\"" + name + "\"," +
-				"\"title\":\"Caetano's growth tales and fantastic friends\"," +
-				"\"imgPath\":\"caetano\"," +
-				"\"text\":\"this will be a series of sections regarding caetano's experiences\"," +
-				"\"orderIndex\":\"1\"");
-		if(children != null) {
-			stringBuilder.append(", \n");
-			stringBuilder.append("\"paragraphs\": [ \n");
-			int i = 1;
-			for(String child : children) {
-				stringBuilder.append("\"").append(child).append("\"");
-				if(i++ < children.size()) {
-					stringBuilder.append(",");
-				}
-			}
-			stringBuilder.append(" ] \n");
-		}
-		stringBuilder.append("\n}");
-		return stringBuilder.toString();
-	}
-
-	private void testParagraph() {
-		testParagraphInsert();
-		testParagraphUpdate();
-		testParagraphFindBy();
-		testParagraphFindAll();
-		testParagraphAddChild();
-		testParagraphDelChild();
-		testParagraphDelete();
-	}
-
-	private void testParagraphInsert() {
-		ResponseEntity<Paragraph> result = paragraphController.upsert(getParagraphMessage(ENTITY_ID, ENTITY_NAME, null));
-		List<Paragraph> all = paragraphRepository.findAll();
-		Assertions.assertEquals(all.size(), 1);
-
-		Paragraph entity = all.get(0);
-		Assertions.assertEquals(entity.getId(), ENTITY_ID);
-		Assertions.assertEquals(entity.getName(), ENTITY_NAME);
-
-		Assertions.assertEquals(result.getBody(), entity);
-		Assertions.assertEquals(result.getStatusCodeValue(), STATUS_CODE_OK);
-	}
-
-	private void testParagraphUpdate() {
-		ResponseEntity<Paragraph> result = paragraphController.upsert(getParagraphMessage(ENTITY_ID, ENTITY_NAME_UPDATE, null));
-
-		List<Paragraph> all = paragraphRepository.findAll();
-		Assertions.assertEquals(all.size(), 1);
-
-		Paragraph entity = all.get(0);
-		Assertions.assertEquals(entity.getId(), ENTITY_ID);
-		Assertions.assertEquals(entity.getName(), ENTITY_NAME_UPDATE);
-
-		Assertions.assertEquals(result.getBody(), entity);
-		Assertions.assertEquals(result.getStatusCodeValue(), STATUS_CODE_OK);
-	}
-
-	private void testParagraphFindBy() {
-		ResponseEntity<Paragraph> result = paragraphController.find(ENTITY_ID);
-		Assertions.assertNotNull(result.getBody());
-		Assertions.assertEquals(result.getBody().getId(), ENTITY_ID);
-		Assertions.assertTrue(paragraphRepository.findById(ENTITY_ID).isPresent());
-		Assertions.assertEquals(result.getBody(), paragraphRepository.findById(ENTITY_ID).get());
-	}
-
-	private void testParagraphFindAll() {
-		paragraphController.upsert(getParagraphMessage(ENTITY_ID_DUPLICATE, ENTITY_NAME, null));
-
-		List<Paragraph> all = paragraphRepository.findAll();
-		Assertions.assertEquals(all.size(), 2);
-		Paragraph entity1 = paragraphRepository.findById(ENTITY_ID).get();
-		Paragraph entity2 = paragraphRepository.findById(ENTITY_ID).get();
-		Assertions.assertTrue(all.contains(entity1));
-		Assertions.assertTrue(all.contains(entity2));
-	}
-
-	private void testParagraphAddChild() {
-		List<String> children = new ArrayList<>();
-		children.add(ENTITY_CHILD_ID);
-
-		ResponseEntity<Paragraph> result = paragraphController.addChild(getParagraphMessage(ENTITY_ID, ENTITY_NAME_UPDATE, children));
-		Assertions.assertEquals(result.getBody().getId(), ENTITY_ID);
-		Paragraph entity = paragraphRepository.findById(ENTITY_ID).get();
-		Assertions.assertEquals(entity.getAccountables().size(), 1);
-		Assertions.assertEquals(entity.getAccountables().get(0), ENTITY_CHILD_ID);
-	}
-
-	private void testParagraphDelChild() {
-		List<String> children = new ArrayList<>();
-		children.add(ENTITY_CHILD_ID);
-
-		ResponseEntity<Paragraph> result = paragraphController.delChild(getParagraphMessage(ENTITY_ID, ENTITY_NAME_UPDATE, children));
-		Paragraph entity = paragraphRepository.findById(ENTITY_ID).get();
-		Assertions.assertEquals(entity.getAccountables().size(), 0);
-	}
-
-	private void testParagraphDelete() {
-		ResponseEntity<Paragraph> result = paragraphController.delete(ENTITY_ID);
-		Assertions.assertEquals(ENTITY_ID, result.getBody().getId());
-		Assertions.assertNull(paragraphController.find(getParagraphMessage(ENTITY_ID, ENTITY_NAME, null)).getBody());
-	}
-
-	private String getParagraphMessage(final String id, final String name, List<String> children) {
-		StringBuilder stringBuilder = new StringBuilder("{ " +
-				"\"id\":\"" + id + "\"," +
-				"\"name\":\"" + name + "\"," +
-				"\"title\":\"Caetano's growth tales and fantastic friends\"," +
-				"\"imgPath\":\"caetano\"," +
-				"\"text\":\"this will be a series of sections regarding caetano's experiences\"," +
-				"\"orderIndex\":\"1\"");
-		if(children != null) {
+		if(accountables != null) {
 			stringBuilder.append(", \n");
 			stringBuilder.append("\"accountables\": [ \n");
 			int i = 1;
-			for(String child : children) {
+			for(String child : accountables) {
 				stringBuilder.append("\"").append(child).append("\"");
-				if(i++ < children.size()) {
+				if(i++ < accountables.size()) {
 					stringBuilder.append(",");
 				}
 			}
@@ -714,85 +296,34 @@ class TalemanagerApplicationTests {
 		clearDb();
 		databaseCsvLoader.loadAll();
 
-		List<Tale> tales = taleRepository.findAll();
-		Assertions.assertFalse(tales.isEmpty());
-		Assertions.assertEquals(tales.size(), 1);
-		Tale tale = tales.get(0);
-		Assertions.assertEquals(tale.getId(), ENTITY_ID);
-		Assertions.assertEquals(tale.getName(), ENTITY_NAME);
-		Assertions.assertFalse(tale.getBooks().isEmpty());
-		Assertions.assertEquals(tale.getBooks().get(0), ENTITY_CHILD_ID);
-
-		List<Book> books = bookRepository.findAll();
-		Assertions.assertFalse(books.isEmpty());
-		Assertions.assertEquals(books.size(), 1);
-		Book book = books.get(0);
-		Assertions.assertEquals(book.getId(), ENTITY_ID);
-		Assertions.assertEquals(book.getName(), ENTITY_NAME);
-		Assertions.assertFalse(book.getSections().isEmpty());
-		Assertions.assertEquals(book.getSections().get(0), ENTITY_CHILD_ID);
-
-		List<Section> sections = sectionRepository.findAll();
-		Assertions.assertFalse(sections.isEmpty());
-		Assertions.assertEquals(sections.size(), 1);
-		Section section = sections.get(0);
-		Assertions.assertEquals(section.getId(), ENTITY_ID);
-		Assertions.assertEquals(section.getName(), ENTITY_NAME);
-		Assertions.assertFalse(section.getChapter().isEmpty());
-		Assertions.assertEquals(section.getChapter().get(0), ENTITY_CHILD_ID);
-
-		List<Chapter> chapters = chapterRepository.findAll();
-		Assertions.assertFalse(chapters.isEmpty());
-		Assertions.assertEquals(chapters.size(), 1);
-		Chapter chapter = chapters.get(0);
-		Assertions.assertEquals(chapter.getId(), ENTITY_ID);
-		Assertions.assertEquals(chapter.getName(), ENTITY_NAME);
-		Assertions.assertFalse(chapter.getParagraphs().isEmpty());
-		Assertions.assertEquals(chapter.getParagraphs().get(0), ENTITY_CHILD_ID);
-
-		List<Paragraph> paragraphs = paragraphRepository.findAll();
-		Assertions.assertFalse(paragraphs.isEmpty());
-		Assertions.assertEquals(paragraphs.size(), 1);
-		Paragraph paragraph = paragraphs.get(0);
-		Assertions.assertEquals(paragraph.getId(), ENTITY_ID);
-		Assertions.assertEquals(paragraph.getName(), ENTITY_NAME);
-		Assertions.assertFalse(paragraph.getAccountables().isEmpty());
-		Assertions.assertEquals(paragraph.getAccountables().get(0), ENTITY_CHILD_ID);
-		Assertions.assertEquals(paragraph.getAccountables().get(1), ENTITY_CHILD_ID_2);
+		List<Registry> registries = registryRepository.findAll();
+		Assertions.assertFalse(registries.isEmpty());
+		Assertions.assertEquals(registries.size(), 2);
+		Registry registry = registries.get(0);
+		Assertions.assertEquals(registry.getId(), ENTITY_ID);
+		Assertions.assertEquals(registry.getName(), ENTITY_NAME);
+		Assertions.assertFalse(registry.getAccountables().isEmpty());
+		Assertions.assertEquals(registry.getAccountables().get(0), ENTITY_ID);
 
 		List<Accountables> accountables = accountableRepository.findAll();
 		Assertions.assertFalse(accountables.isEmpty());
-		Assertions.assertEquals(accountables.size(), 2);
+		Assertions.assertEquals(accountables.size(), 1);
 		Accountables accountable = accountables.get(0);
 		Assertions.assertEquals(accountable.getId(), ENTITY_ID);
-		Assertions.assertEquals(accountable.getName(), ENTITY_NAME);
-		accountable = accountables.get(1);
-		Assertions.assertEquals(accountable.getId(), ENTITY_ID_2);
 		Assertions.assertEquals(accountable.getName(), ENTITY_NAME);
 	}
 
 	private void testDumpAndRestoreLoadData() {
-		taleController.upsert(getTaleMessage(ENTITY_ID, ENTITY_NAME, null));
-		taleController.addChild(getTaleMessage(ENTITY_ID, ENTITY_NAME, Collections.singletonList(ENTITY_CHILD_ID)));
-		bookController.upsert(getBookMessage(ENTITY_ID, ENTITY_NAME, null));
-		bookController.addChild(getBookMessage(ENTITY_ID, ENTITY_NAME, Collections.singletonList(ENTITY_CHILD_ID)));
-		sectionController.upsert(getSectionMessage(ENTITY_ID, ENTITY_NAME, null));
-		sectionController.addChild(getSectionMessage(ENTITY_ID, ENTITY_NAME, Collections.singletonList(ENTITY_CHILD_ID)));
-		chapterController.upsert(getChapterMessage(ENTITY_ID, ENTITY_NAME, null));
-		chapterController.addChild(getChapterMessage(ENTITY_ID, ENTITY_NAME, Collections.singletonList(ENTITY_CHILD_ID)));
-		paragraphController.upsert(getParagraphMessage(ENTITY_ID, ENTITY_NAME, null));
-		paragraphController.addChild(getParagraphMessage(ENTITY_ID, ENTITY_NAME, Collections.singletonList(ENTITY_CHILD_ID)));
-		paragraphController.addChild(getParagraphMessage(ENTITY_ID, ENTITY_NAME, Collections.singletonList(ENTITY_CHILD_ID_2)));
+
 		accountableController.upsert(getAccountablesMessage(ENTITY_ID, ENTITY_NAME));
-		accountableController.upsert(getAccountablesMessage(ENTITY_ID_2, ENTITY_NAME));
+		registryController.upsert(getRegistryMessage(ENTITY_ID, ENTITY_NAME, null, null));
+		registryController.upsert(getRegistryMessage(ENTITY_CHILD_ID, ENTITY_NAME, null, null));
+		registryController.addChild(getRegistryMessage(ENTITY_ID, ENTITY_NAME, Collections.singletonList(ENTITY_CHILD_ID), null));
+		registryController.addAccountable(getRegistryMessage(ENTITY_ID, ENTITY_NAME, null, Collections.singletonList(ENTITY_ID)));
 	}
 
 	private void clearDb() {
-		taleRepository.deleteAll();
-		bookRepository.deleteAll();
-		sectionRepository.deleteAll();
-		chapterRepository.deleteAll();
-		paragraphRepository.deleteAll();
+		registryRepository.deleteAll();
 		accountableRepository.deleteAll();
 	}
 

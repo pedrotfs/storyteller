@@ -2,7 +2,6 @@ package br.com.pedrotfs.storyteller.util.impl;
 
 import br.com.pedrotfs.storyteller.domain.*;
 import br.com.pedrotfs.storyteller.service.*;
-import br.com.pedrotfs.storyteller.service.impl.DefaultTaleService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,34 +22,12 @@ class DefaultDatabaseCsvLoaderTest {
     private DefaultDatabaseCsvLoader defaultDatabaseCsvLoader;
 
     @Mock
-    private ParagraphService paragraphService;
-
-    @Mock
-    private ChapterService chapterService;
-
-    @Mock
-    private SectionService sectionService;
-
-    @Mock
-    private BookService bookService;
-
-    @Mock
-    private DefaultTaleService taleService;
+    private RegistryService registryService;
 
     @Mock
     private AccountableService accountableService;
 
-    private final Tale tale = createTestTale();
-
-    private final Book book = createTestBook();
-
-    private final Section section = createTestSection();
-
-    private final Chapter chapter = createTestChapter();
-
-    private final Paragraph paragraph1 = createTestParagraph(PARAGRAPH_1__NAME,PARAGRAPH_1__ID, PARAGRAPH_1__TEXT, PARAGRAPH_1__TITLE, PARAGRAPH_1__ORDER);
-
-    private final Paragraph paragraph2 = createTestParagraph(PARAGRAPH_2__NAME,PARAGRAPH_2__ID, PARAGRAPH_2__TEXT, PARAGRAPH_2__TITLE, PARAGRAPH_2__ORDER);
+    private final Registry registry = createTestRegistry();
 
     private final Accountables accountables1 = createTestAccountable(ACCOUNTABLE_1_ID, ACCOUNTABLE_1_NAME, ACCOUNTABLE_1_AMOUNT);
 
@@ -62,12 +39,7 @@ class DefaultDatabaseCsvLoaderTest {
     private void setUp() {
         closeable = MockitoAnnotations.openMocks(this);
 
-        doReturn(tale).when(taleService).upsertTale(tale);
-        doReturn(book).when(bookService).upsertBook(book);
-        doReturn(section).when(sectionService).upsert(section);
-        doReturn(chapter).when(chapterService).upsert(chapter);
-        doReturn(paragraph1).when(paragraphService).upsert(paragraph1);
-        doReturn(paragraph2).when(paragraphService).upsert(paragraph2);
+        doReturn(registry).when(registryService).upsert(registry);
         doReturn(accountables1).when(accountableService).upsert(accountables1);
         doReturn(accountables2).when(accountableService).upsert(accountables2);
 
@@ -78,12 +50,7 @@ class DefaultDatabaseCsvLoaderTest {
     public void testDump() {
         defaultDatabaseCsvLoader.loadAll();
 
-        verify(taleService).upsertTale(tale);
-        verify(bookService).upsertBook(book);
-        verify(sectionService).upsert(section);
-        verify(chapterService).upsert(chapter);
-        verify(paragraphService).upsert(paragraph1);
-        verify(paragraphService).upsert(paragraph2);
+        verify(registryService).upsert(registry);
         verify(accountableService).upsert(accountables1);
         verify(accountableService).upsert(accountables2);
     }

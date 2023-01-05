@@ -1,7 +1,6 @@
 package br.com.pedrotfs.storyteller.controller;
 
 import br.com.pedrotfs.storyteller.domain.Accountables;
-import br.com.pedrotfs.storyteller.domain.Chapter;
 import br.com.pedrotfs.storyteller.service.AccountableService;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
@@ -47,16 +46,6 @@ public class AccountableController {
 
         LOG.info("operation performed. result follows:" + all.size());
         return new ResponseEntity<>(all, HttpStatus.OK);
-    }
-
-    @GetMapping("/accountables-for-entity/{message}")
-    public ResponseEntity<List<Accountables>> getAccountablesForEntity(@PathVariable final String message) {
-        LOG.info("searching child accountables for object id " + message);
-
-        List<Accountables> accountables = service.findAndAccumulateForNode(message);
-        LOG.info("operation performed. result follows:" + accountables.size());
-        return new ResponseEntity<>(accountables, HttpStatus.OK);
-
     }
 
     @PostMapping("/")

@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 
 public class DatabaseTestProfile extends AbstractMongoClientConfiguration {
 
-    private static final String DB_NAME = "storyteller-test";
+    private static final String DB_NAME = "storytellerv2-test";
 
     @Override
     protected String getDatabaseName() {
