@@ -26,9 +26,7 @@ public class DefaultRegistryService implements RegistryService {
         Registry upsert = this.find(registry);
         if(upsert == null) {
             String id = registry.getId();
-            if(id == null) {
-                id = new ObjectId().toString();
-            }
+            id = new ObjectId().toString();
             upsert = new Registry(id, registry.getName(), registry.getTitle(), registry.getImgPath(), registry.getText(),
                     registry.getType(), registry.getOrderIndex(), registry.getOwner(), registry.getChilds(), registry.getAccountables());
         } else {
