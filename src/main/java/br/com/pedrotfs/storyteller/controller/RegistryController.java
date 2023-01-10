@@ -80,6 +80,15 @@ public class RegistryController {
         return new ResponseEntity<>(all, HttpStatus.OK);
     }
 
+    @GetMapping("/type/{message}")
+    public ResponseEntity<List<Registry>> findByType(@PathVariable final String message) {
+        LOG.info("received message to find by Type " + message);
+
+        List<Registry> all = service.findByType(message);
+        LOG.info("operation performed. result follows:" + all.size());
+        return new ResponseEntity<>(all, HttpStatus.OK);
+    }
+
     @PostMapping("/addChild")
     public ResponseEntity<Registry> addChild(@RequestBody final String message) {
         LOG.info("received message to add childs");

@@ -27,6 +27,8 @@ public interface RegistryService {
 
     List<Registry> findAll();
 
+    List<Registry> findByType(String type);
+
     List<Accountables> findAndAccumulateForNode(String id, Map<String, Accountables> aggregate);
 
     ParentDTO findParent(String id);;

@@ -155,6 +155,23 @@ class DefaultRegistryServiceTest {
     }
 
     @Test
+    public void testFindByType() {
+        List<Registry> registryList = new ArrayList<>();
+        Registry registry = new Registry(ID, NAME, TITLE, null, TEXT, TYPE, ORDER_INDEX, OWNER);
+        Registry registry2 = new Registry(ID_2, NAME, TITLE, null, TEXT, TYPE, ORDER_INDEX, OWNER);
+        registryList.add(registry);
+        registryList.add(registry2);
+
+        doReturn(registryList).when(repository).findByType(TYPE);
+        List<Registry> all = service.findByType(TYPE);
+        Assertions.assertEquals(2, all.size());
+        Assertions.assertEquals(ID, all.get(0).getId());
+        Assertions.assertEquals(TYPE, all.get(0).getType());
+        Assertions.assertEquals(ID_2, all.get(1).getId());
+        Assertions.assertEquals(TYPE, all.get(1).getType());
+    }
+
+    @Test
     public void testAddChild() {
         Registry registry = new Registry(ID, NAME, TITLE, null, TEXT, TYPE, ORDER_INDEX, OWNER);
         doReturn(Optional.of(registry)).when(repository).findById(ID);

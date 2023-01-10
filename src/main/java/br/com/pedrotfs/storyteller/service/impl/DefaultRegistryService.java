@@ -26,7 +26,9 @@ public class DefaultRegistryService implements RegistryService {
         Registry upsert = this.find(registry);
         if(upsert == null) {
             String id = registry.getId();
-            id = new ObjectId().toString();
+            if(id == null || id.isEmpty()) {
+                id = new ObjectId().toString();
+            }
             upsert = new Registry(id, registry.getName(), registry.getTitle(), registry.getImgPath(), registry.getText(),
                     registry.getType(), registry.getOrderIndex(), registry.getOwner(), registry.getChilds(), registry.getAccountables());
         } else {
@@ -140,6 +142,11 @@ public class DefaultRegistryService implements RegistryService {
     @Override
     public List<Registry> findAll() {
         return registryRepository.findAll();
+    }
+
+    @Override
+    public List<Registry> findByType(final String type) {
+        return registryRepository.findByType(type);
     }
 
     @Override
