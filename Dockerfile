@@ -1,5 +1,5 @@
 #copy to root
-FROM openjdk:11-jdk-alpine
+FROM amazoncorretto:11-alpine-jdk
 EXPOSE 8090
 ARG JAR_FILE=target/storyteller-1.0.0.jar
 ADD ${JAR_FILE} app.jar

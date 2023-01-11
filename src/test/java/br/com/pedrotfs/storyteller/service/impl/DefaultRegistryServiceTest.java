@@ -241,8 +241,6 @@ class DefaultRegistryServiceTest {
         doReturn(Optional.of(registry3)).when(repository).findById(ID + "g");
 
         doReturn(accountables1, accountables2, accountables3).when(accountableService).find(ArgumentMatchers.any(Accountables.class));
-        //doReturn(accountables2).when(accountableService).find(ArgumentMatchers.any(Accountables.class));
-        //doReturn(accountables3).when(accountableService).find(ArgumentMatchers.any(Accountables.class));
 
         List<Accountables> accumulate = service.findAndAccumulateForNode(ID, null);
         Assertions.assertNotNull(accumulate);
