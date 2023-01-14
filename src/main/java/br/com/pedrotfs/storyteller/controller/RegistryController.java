@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -86,6 +87,21 @@ public class RegistryController {
         List<Registry> all = service.findByType(message);
         LOG.info("operation performed. result follows:" + all.size());
         return new ResponseEntity<>(all, HttpStatus.OK);
+    }
+
+    @GetMapping("/parent-childs/{message}")
+    public ResponseEntity<List<String>> findByParent(@PathVariable final String message) {
+        LOG.info("received message to find by parent with parent" + message);
+
+        Registry entity = new Registry(message, null, null, null, null, null, null, null, null, null);
+        Registry result = service.find(entity);
+        LOG.info("operation performed. result follows:");
+        if(result != null) {
+            LOG.info(result.toString());
+            return new ResponseEntity<>(result.getChilds(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_FOUND);
+        }
     }
 
     @PostMapping("/addChild")
